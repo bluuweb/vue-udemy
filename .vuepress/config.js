@@ -18,6 +18,7 @@ module.exports = {
       [
         '/',
         '/07-crud-firebase/',
+        '/08-auth-firebase/',
       ]
   }
  
