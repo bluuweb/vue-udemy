@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi primer proyecto con Vue 3!</title>
+    <!-- CDN vue 3 -->
+    <script src="https://unpkg.com/vue@next"></script>
+
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <div id="app">
+
+        <h1>Hello Vue 3!</h1>
+        <h2>Tipo de cuenta: {{cuenta}}</h2>
+        <h2 v-if="estado">Cuenta activada</h2>
+        <h2 v-else>Cuenta desactivada</h2>
+        <!-- <h2>Saldo disponible: {{ cantidad > 1 ? cantidad : 'Sin saldo' }}</h2> -->
+        <h2 v-if="cantidad > 100">Cantidad: {{cantidad}}</h2>
+        <h2 v-else-if="cantidad <= 100 && cantidad > 0">Cantidad: <span style="color:red">{{cantidad}}</span></h2>
+        <h2 v-else>Sin cantidad: {{cantidad}}</h2>
+
+        <hr>
+        <!-- operador ternario -->
+        <h2 
+            :style="{'font-size': '50px'}"
+            class="bg-dark"
+            :class="colorCantidad">
+            Cantidad: {{cantidad}}
+        </h2>
+
+        <hr>
+        <h2>Servicios disponibles:</h2>
+        <ul>
+            <li 
+            v-for="(item, index) in servicios" :key="index"
+            >
+                {{index + 1}} - {{item}}
+            </li>
+        </ul>
+
+        <hr>
+        <!-- <button v-on:click="agregarSaldo">Agregar Saldo</button> -->
+        <agregar-saldo @agregar-saldo="agregarSaldo"></agregar-saldo>
+        <button @click="disminuirSaldo" :disabled="desactivar">Disminuir Saldo</button>
+
+        <hr>
+        <footer-banco :cantidad="cantidad" texto="Pie de página" />
+
+    </div>
+    <script src="main.js"></script>
+    <script src="components/Footer.js"></script>
+    <script src="components/AgregarSaldo.js"></script>
+
+    <script>
+        const mountedApp = app.mount('#app');
+    </script>
+</body>
+</html>

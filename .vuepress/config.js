@@ -17,6 +17,8 @@ module.exports = {
     sidebar:
       [
         '/',
+        // '/01-fundamentos/',
+        // '/02-practica/',
         '/07-crud-firebase/',
         '/08-auth-firebase/',
         '/09-auth-firestore/',

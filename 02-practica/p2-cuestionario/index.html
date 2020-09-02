@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario</title>
+
+    <!-- CDN vue 3 -->
+    <script src="https://unpkg.com/vue@next"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+</head>
+<body>
+    <div id="app" class="container mt-5">
+        <titulo titulo="Cuestionario Vue"></titulo>
+        
+        <pregunta
+            v-for="item in preguntas" :key="item.id"
+            :objeto-pregunta="item"
+            @guardar-respuesta="guardarRespuesta"
+        ></pregunta>
+
+        <enviar
+            :activar="revisarRespuestas"
+            @reiniciar="reiniciar"
+        >
+        </enviar>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="components/Titulo.js"></script>
+    <script src="components/Pregunta.js"></script>
+    <script src="components/Enviar.js"></script>
+    <script>
+        app.mount('#app')
+    </script>
+</body>
+</html>

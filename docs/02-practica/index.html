@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Práctica Cuestionario | Vue Udemy</title>
+    <meta name="generator" content="VuePress 1.5.0">
+    
+    <meta name="description" content="Aprende Vue.js con bluuweb">
+    <link rel="preload" href="/vue-udemy/assets/css/0.styles.c30742b8.css" as="style"><link rel="preload" href="/vue-udemy/assets/js/app.525ae901.js" as="script"><link rel="preload" href="/vue-udemy/assets/js/2.d8396f48.js" as="script"><link rel="preload" href="/vue-udemy/assets/js/6.982fdf67.js" as="script"><link rel="prefetch" href="/vue-udemy/assets/js/10.5fdc55b7.js"><link rel="prefetch" href="/vue-udemy/assets/js/3.298b97e0.js"><link rel="prefetch" href="/vue-udemy/assets/js/4.9629e8d8.js"><link rel="prefetch" href="/vue-udemy/assets/js/5.17822793.js"><link rel="prefetch" href="/vue-udemy/assets/js/7.2e0107f2.js"><link rel="prefetch" href="/vue-udemy/assets/js/8.368e37ff.js"><link rel="prefetch" href="/vue-udemy/assets/js/9.49055db0.js">
+    <link rel="stylesheet" href="/vue-udemy/assets/css/0.styles.c30742b8.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/vue-udemy/" class="home-link router-link-active"><!----> <span class="site-name">Vue Udemy</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/vue-udemy/" class="nav-link">
+  Guía
+</a></div><div class="nav-item"><a href="https://youtube.com/bluuweb" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Youtube
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="nav-item"><a href="http://curso-vue-js-udemy.bluuweb.cl" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Curso Premium
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/vue-udemy/" class="nav-link">
+  Guía
+</a></div><div class="nav-item"><a href="https://youtube.com/bluuweb" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Youtube
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="nav-item"><a href="http://curso-vue-js-udemy.bluuweb.cl" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Curso Premium
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <!----></nav>  <ul class="sidebar-links"><li><a href="/vue-udemy/" class="sidebar-link">Curso Vue.js bluuweb</a></li><li><a href="/vue-udemy/07-crud-firebase/" class="sidebar-link">07 CRUD Firebase</a></li><li><a href="/vue-udemy/08-auth-firebase/" class="sidebar-link">08 AUTH Firebase</a></li><li><a href="/vue-udemy/09-auth-firestore/" class="sidebar-link">09 AUTH + FIRESTORE</a></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="practica-cuestionario"><a href="#practica-cuestionario" class="header-anchor">#</a> Práctica Cuestionario</h1> <p>Aterrizaremos lo aprendido hasta ahora:</p> <h2 id="vue-3-bootstrap"><a href="#vue-3-bootstrap" class="header-anchor">#</a> Vue 3 + Bootstrap</h2> <div class="language-html extra-class"><pre class="language-html"><code><span class="token doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>es<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>UTF-8<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>viewport<span class="token punctuation">&quot;</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>width=device-width, initial-scale=1.0<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>Cuestionario<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token comment">&lt;!-- CDN Vue 3 --&gt;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>https://unpkg.com/vue@next<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token comment">&lt;!-- CDN Bootstrap 4 --&gt;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>stylesheet<span class="token punctuation">&quot;</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css<span class="token punctuation">&quot;</span></span> <span class="token attr-name">integrity</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z<span class="token punctuation">&quot;</span></span> <span class="token attr-name">crossorigin</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>anonymous<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>app<span class="token punctuation">&quot;</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>container mt-5<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>titulo</span> <span class="token attr-name">titulo</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>Cuestionario Vue<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>titulo</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>app.js<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>components/Titulo.js<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+        app<span class="token punctuation">.</span><span class="token function">mount</span><span class="token punctuation">(</span><span class="token string">'#app'</span><span class="token punctuation">)</span>
+    </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> app <span class="token operator">=</span> Vue<span class="token punctuation">.</span><span class="token function">createApp</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// components/Titulo.js</span>
+
+app<span class="token punctuation">.</span><span class="token function">component</span><span class="token punctuation">(</span><span class="token string">'titulo'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    props<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'titulo'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    template<span class="token operator">:</span> <span class="token comment">/*html*/</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+        &lt;h1&gt;{{titulo}}&lt;/h1&gt;
+    </span><span class="token template-punctuation string">`</span></span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><h2 id="preguntas"><a href="#preguntas" class="header-anchor">#</a> Preguntas</h2> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// app.js</span>
+
+<span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+        preguntas<span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span>
+                id<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+                texto<span class="token operator">:</span> <span class="token string">'Pregunta #1'</span><span class="token punctuation">,</span>
+                respuesta<span class="token operator">:</span> <span class="token keyword">null</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span>
+                id<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+                texto<span class="token operator">:</span> <span class="token string">'Pregunta #2'</span><span class="token punctuation">,</span>
+                respuesta<span class="token operator">:</span> <span class="token keyword">null</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span>
+                id<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
+                texto<span class="token operator">:</span> <span class="token string">'Pregunta #3'</span><span class="token punctuation">,</span>
+                respuesta<span class="token operator">:</span> <span class="token keyword">null</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span>
+                id<span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span>
+                texto<span class="token operator">:</span> <span class="token string">'Pregunta #4'</span><span class="token punctuation">,</span>
+                respuesta<span class="token operator">:</span> <span class="token keyword">null</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code>app<span class="token punctuation">.</span><span class="token function">component</span><span class="token punctuation">(</span><span class="token string">'pregunta'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    props<span class="token operator">:</span> <span class="token punctuation">{</span>
+        objetoPregunta<span class="token operator">:</span> Object
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    template<span class="token operator">:</span> <span class="token comment">/*html*/</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+    &lt;div class=&quot;my-3&quot;&gt;
+        &lt;p class=&quot;h5 lead&quot;&gt;{{objetoPregunta.texto}}&lt;/p&gt;
+    &lt;/div&gt;
+    </span><span class="token template-punctuation string">`</span></span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><div class="language-html extra-class"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>pregunta</span>
+    <span class="token attr-name">v-for</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>item in preguntas<span class="token punctuation">&quot;</span></span> <span class="token attr-name">:key</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>item.id<span class="token punctuation">&quot;</span></span>
+    <span class="token attr-name">:objeto-pregunta</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>item<span class="token punctuation">&quot;</span></span>
+<span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>pregunta</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h2 id="guardar-respuesta"><a href="#guardar-respuesta" class="header-anchor">#</a> Guardar Respuesta</h2> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// app.js</span>
+
+methods<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token function">guardarRespuesta</span><span class="token punctuation">(</span><span class="token parameter">objeto</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>objeto<span class="token punctuation">)</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>preguntas <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>preguntas<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">item</span> <span class="token operator">=&gt;</span> item<span class="token punctuation">.</span>id <span class="token operator">===</span> objeto<span class="token punctuation">.</span>id <span class="token operator">?</span> objeto <span class="token operator">:</span> item<span class="token punctuation">)</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>preguntas<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre></div><div class="language-html extra-class"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>pregunta</span>
+    <span class="token attr-name">v-for</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>item in preguntas<span class="token punctuation">&quot;</span></span> <span class="token attr-name">:key</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>item.id<span class="token punctuation">&quot;</span></span>
+    <span class="token attr-name">:objeto-pregunta</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>item<span class="token punctuation">&quot;</span></span>
+    <span class="token attr-name">@guardar-respuesta</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>guardarRespuesta<span class="token punctuation">&quot;</span></span>
+<span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>pregunta</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code>app<span class="token punctuation">.</span><span class="token function">component</span><span class="token punctuation">(</span><span class="token string">'pregunta'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    props<span class="token operator">:</span> <span class="token punctuation">{</span>
+        objetoPregunta<span class="token operator">:</span> Object
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    template<span class="token operator">:</span> <span class="token comment">/*html*/</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+    &lt;div class=&quot;my-3&quot;&gt;
+        &lt;p class=&quot;h5 lead&quot;&gt;{{objetoPregunta.texto}}&lt;/p&gt;
+        &lt;button class=&quot;btn btn-success mr-2&quot; @click=&quot;respuestaCliente(true)&quot;&gt;Verdadero&lt;/button&gt;
+        &lt;button class=&quot;btn btn-danger&quot; @click=&quot;respuestaCliente(false)&quot;&gt;Falso&lt;/button&gt;
+        &lt;div v-if=&quot;objetoPregunta.respuesta !== null&quot; class=&quot;text-muted&quot;&gt;
+            Respuesta: {{objetoPregunta.respuesta}}
+        &lt;/div&gt;
+    &lt;/div&gt;
+    </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+    methods<span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token function">respuestaCliente</span><span class="token punctuation">(</span><span class="token parameter">res</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>objetoPregunta<span class="token punctuation">.</span>respuesta <span class="token operator">=</span> res
+            <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">$emit</span><span class="token punctuation">(</span><span class="token string">'guardar-respuesta'</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>objetoPregunta<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><h2 id="boton-enviar"><a href="#boton-enviar" class="header-anchor">#</a> Botón Enviar</h2> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// app.js</span>
+
+computed<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token function">revisarRespuestas</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> cantidadRespuestas <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>preguntas<span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token parameter">item</span> <span class="token operator">=&gt;</span> item<span class="token punctuation">.</span>respuesta <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>cantidadRespuestas<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>cantidadRespuestas<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'todas respondidas'</span><span class="token punctuation">)</span>
+            <span class="token keyword">return</span> <span class="token boolean">true</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'faltan'</span><span class="token punctuation">)</span>
+            <span class="token keyword">return</span> <span class="token boolean">false</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><div class="language-html extra-class"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>enviar</span>
+    <span class="token attr-name">:activar</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>revisarRespuestas<span class="token punctuation">&quot;</span></span>
+<span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>enviar</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code>app<span class="token punctuation">.</span><span class="token function">component</span><span class="token punctuation">(</span><span class="token string">'enviar'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    props<span class="token operator">:</span> <span class="token punctuation">{</span>
+        activar<span class="token operator">:</span> Boolean
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token punctuation">{</span>
+            activarEnvio<span class="token operator">:</span> <span class="token boolean">false</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    template<span class="token operator">:</span> <span class="token comment">/*html*/</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+    &lt;div&gt;
+        &lt;button 
+            class=&quot;btn btn-dark btn-block&quot; 
+            v-if=&quot;activar&quot;   
+        &gt;
+            Enviar...
+        &lt;/button&gt;
+    &lt;/div&gt;
+    </span><span class="token template-punctuation string">`</span></span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><h2 id="enviando-y-reiniciar"><a href="#enviando-y-reiniciar" class="header-anchor">#</a> Enviando y Reiniciar</h2> <div class="language-js extra-class"><pre class="language-js"><code>app<span class="token punctuation">.</span><span class="token function">component</span><span class="token punctuation">(</span><span class="token string">'enviar'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    props<span class="token operator">:</span> <span class="token punctuation">{</span>
+        activar<span class="token operator">:</span> Boolean
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token punctuation">{</span>
+            activarEnvio<span class="token operator">:</span> <span class="token boolean">false</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    template<span class="token operator">:</span> <span class="token comment">/*html*/</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+    &lt;div&gt;
+        &lt;button 
+            class=&quot;btn btn-dark btn-block&quot; 
+            v-if=&quot;activar&quot; 
+            @click=&quot;enviando&quot;
+            :class=&quot;[activarEnvio ? 'disabled' : '']&quot;    
+        &gt;
+            Enviar...
+        &lt;/button&gt;
+        &lt;div class=&quot;text-center mt-3&quot; v-if=&quot;activarEnvio&quot;&gt;
+            &lt;div class=&quot;spinner-border&quot; role=&quot;status&quot;&gt;
+                &lt;span class=&quot;sr-only&quot;&gt;Loading...&lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+    methods<span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token function">enviando</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>activarEnvio <span class="token operator">=</span> <span class="token boolean">true</span>
+            <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+                <span class="token keyword">this</span><span class="token punctuation">.</span>activarEnvio <span class="token operator">=</span> <span class="token boolean">false</span>
+                <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">$emit</span><span class="token punctuation">(</span><span class="token string">'reiniciar'</span><span class="token punctuation">)</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">2000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><div class="language-html extra-class"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>enviar</span>
+    <span class="token attr-name">:activar</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>revisarRespuestas<span class="token punctuation">&quot;</span></span>
+    <span class="token attr-name">@reiniciar</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>reiniciar<span class="token punctuation">&quot;</span></span>
+<span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>enviar</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// app.js</span>
+
+methods<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token function">guardarRespuesta</span><span class="token punctuation">(</span><span class="token parameter">objeto</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>objeto<span class="token punctuation">)</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>preguntas <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>preguntas<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">item</span> <span class="token operator">=&gt;</span> item<span class="token punctuation">.</span>id <span class="token operator">===</span> objeto<span class="token punctuation">.</span>id <span class="token operator">?</span> objeto <span class="token operator">:</span> item<span class="token punctuation">)</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>preguntas<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token function">reiniciar</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>preguntas <span class="token operator">=</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span>
+                id<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+                texto<span class="token operator">:</span> <span class="token string">'Pregunta #1'</span><span class="token punctuation">,</span>
+                respuesta<span class="token operator">:</span> <span class="token keyword">null</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span>
+                id<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+                texto<span class="token operator">:</span> <span class="token string">'Pregunta #2'</span><span class="token punctuation">,</span>
+                respuesta<span class="token operator">:</span> <span class="token keyword">null</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span>
+                id<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
+                texto<span class="token operator">:</span> <span class="token string">'Pregunta #3'</span><span class="token punctuation">,</span>
+                respuesta<span class="token operator">:</span> <span class="token keyword">null</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span>
+                id<span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span>
+                texto<span class="token operator">:</span> <span class="token string">'Pregunta #4'</span><span class="token punctuation">,</span>
+                respuesta<span class="token operator">:</span> <span class="token keyword">null</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/vue-udemy/assets/js/app.525ae901.js" defer></script><script src="/vue-udemy/assets/js/2.d8396f48.js" defer></script><script src="/vue-udemy/assets/js/6.982fdf67.js" defer></script>
+  </body>
+</html>
