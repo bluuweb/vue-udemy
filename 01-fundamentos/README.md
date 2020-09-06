@@ -395,34 +395,17 @@ props: {
 ```
 :::
 
-## Custom Events
-Supongamos que el componente hijo desea modificar algún dato del elemento padre, para esta operación tenemos que emitir un evento que se encuentre previamente configurado en el componente padre.
-
-Pasaremos el botón de aumentar saldo a un componente con el methods <b>"agregarSaldoHijo()":</b>
+## Props Default
+Podemos establecer un valor predeterminado en caso que el componente no reciba el props en cuestión.
 ```js
-// components/AgregarSaldo.js
-app.component('agregar-saldo', {
-    template: /*html*/`
-        <button v-on:click="agregarSaldoHijo">Agregar Saldo</button>
-    `,
-    methods: {
-        agregarSaldoHijo() {
-            this.$emit('agregar-saldo');
-        }
+props: {
+    texto: String,
+    desactivar: {
+        type: Boolean,
+        default: false
     }
-})
+}
 ```
-
-Estamos emitiendo un evento "agregar-saldo" cuando el usuario haga click en el botón.
-
-En nuestro llamado al componente, especificamos ese evento "agregar-saldo" e indicamos la acción que debería ejecutar al presionar dicho botón.
-```html
-<agregar-saldo @agregar-saldo="agregarSaldo"></agregar-saldo>
-```
-
-"agregarSaldo()" está en nuestro componente padre por ende todo sigue funcionando.
-
-En la siguiente sección realizaremos una práctica para aterrizar todos estos conceptos.
 
 
 

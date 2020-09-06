@@ -26,3 +26,6 @@ module.exports = {
   }
  
 }
+
+
+{/* <img :src="$withBase('/img/compu-1.gif')"> */}
