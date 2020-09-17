@@ -1,4 +1,4 @@
-# 08 AUTH Firebase
+# AUTH Firebase
 Configurar auth en nuestra aplicación de Vue.
 
 ## Instalaciones

@@ -1,4 +1,4 @@
-# 07 CRUD Firebase
+# CRUD Firebase
 
 Mi primer CRUD con Vue Router, Vuex y Firebase.
 

@@ -1,4 +1,4 @@
-# 09 AUTH + FIRESTORE
+# AUTH + FIRESTORE
 Tomando como ejemplo los dos ejercicios anteriores:
 
 ## GET tareas
