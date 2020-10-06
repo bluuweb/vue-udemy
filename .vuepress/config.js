@@ -21,6 +21,7 @@ module.exports = {
         '/02-cli/',
         '/03-router/',
         '/04-vuex/',
+        '/05-form/',
         '/07-crud-firebase/',
         '/08-auth-firebase/',
         '/09-auth-firestore/',
