@@ -1,4 +1,4 @@
-# AUTH + FIRESTORE
+# AUTH + FIRESTORE (Vue.js 2)
 Tomando como ejemplo los dos ejercicios anteriores:
 
 ## GET tareas

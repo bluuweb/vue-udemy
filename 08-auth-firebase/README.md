@@ -1,4 +1,4 @@
-# AUTH Firebase
+# AUTH Firebase (Vue.js 2)
 Configurar auth en nuestra aplicación de Vue.
 
 ## Instalaciones

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>AUTH API Firebase | Vue Udemy</title>
+    <meta name="generator" content="VuePress 1.5.0">
+    
+    <meta name="description" content="Aprende Vue.js con bluuweb">
+    <link rel="preload" href="/vue-udemy/assets/css/0.styles.c30742b8.css" as="style"><link rel="preload" href="/vue-udemy/assets/js/app.88e7e9e2.js" as="script"><link rel="preload" href="/vue-udemy/assets/js/2.d8396f48.js" as="script"><link rel="preload" href="/vue-udemy/assets/js/14.11da6be1.js" as="script"><link rel="prefetch" href="/vue-udemy/assets/js/10.3b547512.js"><link rel="prefetch" href="/vue-udemy/assets/js/11.268c1d63.js"><link rel="prefetch" href="/vue-udemy/assets/js/12.132c63cf.js"><link rel="prefetch" href="/vue-udemy/assets/js/13.be71ea38.js"><link rel="prefetch" href="/vue-udemy/assets/js/15.f0299419.js"><link rel="prefetch" href="/vue-udemy/assets/js/16.dfb8457c.js"><link rel="prefetch" href="/vue-udemy/assets/js/17.c71766f0.js"><link rel="prefetch" href="/vue-udemy/assets/js/18.4c9d9e3e.js"><link rel="prefetch" href="/vue-udemy/assets/js/3.96be874e.js"><link rel="prefetch" href="/vue-udemy/assets/js/4.9629e8d8.js"><link rel="prefetch" href="/vue-udemy/assets/js/5.6af24e42.js"><link rel="prefetch" href="/vue-udemy/assets/js/6.4788979e.js"><link rel="prefetch" href="/vue-udemy/assets/js/7.4974dff2.js"><link rel="prefetch" href="/vue-udemy/assets/js/8.23e53ddf.js"><link rel="prefetch" href="/vue-udemy/assets/js/9.c22dd3af.js">
+    <link rel="stylesheet" href="/vue-udemy/assets/css/0.styles.c30742b8.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/vue-udemy/" class="home-link router-link-active"><!----> <span class="site-name">Vue Udemy</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/vue-udemy/" class="nav-link">
+  Guía
+</a></div><div class="nav-item"><a href="https://youtube.com/bluuweb" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Youtube
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="nav-item"><a href="http://curso-vue-js-udemy.bluuweb.cl" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Curso Premium
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/vue-udemy/" class="nav-link">
+  Guía
+</a></div><div class="nav-item"><a href="https://youtube.com/bluuweb" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Youtube
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="nav-item"><a href="http://curso-vue-js-udemy.bluuweb.cl" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Curso Premium
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <!----></nav>  <ul class="sidebar-links"><li><a href="/vue-udemy/" class="sidebar-link">Curso Vue.js bluuweb</a></li><li><a href="/vue-udemy/01-fundamentos/" class="sidebar-link">Fundamentos</a></li><li><a href="/vue-udemy/02-cli/" class="sidebar-link">Vue CLI</a></li><li><a href="/vue-udemy/03-router/" class="sidebar-link">Vue Router</a></li><li><a href="/vue-udemy/04-vuex/" class="sidebar-link">Vuex</a></li><li><a href="/vue-udemy/05-form/" class="sidebar-link">Formularios</a></li><li><a href="/vue-udemy/06-crud/" class="sidebar-link">CRUD Vuex</a></li><li><a href="/vue-udemy/07-01-firebase/" class="sidebar-link">REST Firebase</a></li><li><a href="/vue-udemy/08-01-auth/" class="active sidebar-link">AUTH API Firebase</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#reglas-de-seguridad" class="sidebar-link">Reglas de Seguridad</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#cargarlocalstorage" class="sidebar-link">cargarLocalStorage</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#ruta-registro" class="sidebar-link">Ruta Registro</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#registro-vue" class="sidebar-link">Registro.vue</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#activar-registro-firebase" class="sidebar-link">Activar Registro Firebase</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#registrar-firebase" class="sidebar-link">Registrar Firebase</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#ingreso-vue" class="sidebar-link">Ingreso.vue</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#ingresousuario-firebase" class="sidebar-link">ingresoUsuario Firebase</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#leer-doc-con-token" class="sidebar-link">Leer doc con token</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#tareas-uid" class="sidebar-link">Tareas UID</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#getters" class="sidebar-link">Getters</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#navbar" class="sidebar-link">Navbar</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#cerrar-sesion" class="sidebar-link">Cerrar Sesión</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#router-guard-documentacion" class="sidebar-link">Router Guard (documentación)</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#localstorage" class="sidebar-link">LocalStorage</a></li><li class="sidebar-sub-header"><a href="/vue-udemy/08-01-auth/#deploy" class="sidebar-link">Deploy</a></li></ul></li><li><a href="/vue-udemy/07-crud-firebase/" class="sidebar-link">CRUD Firebase (Vue.js 2)</a></li><li><a href="/vue-udemy/08-auth-firebase/" class="sidebar-link">AUTH Firebase (Vue.js 2)</a></li><li><a href="/vue-udemy/09-auth-firestore/" class="sidebar-link">AUTH + FIRESTORE (Vue.js 2)</a></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="auth-api-firebase"><a href="#auth-api-firebase" class="header-anchor">#</a> AUTH API Firebase</h1> <p>Configurar auth en nuestra aplicación de Vue.</p> <h2 id="reglas-de-seguridad"><a href="#reglas-de-seguridad" class="header-anchor">#</a> Reglas de Seguridad</h2> <div class="language-js extra-class"><pre class="language-js"><code><span class="token punctuation">{</span>
+  <span class="token string">&quot;rules&quot;</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token string">&quot;tareas-api&quot;</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token string">&quot;.read&quot;</span><span class="token operator">:</span> <span class="token string">&quot;auth != null&quot;</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;.write&quot;</span><span class="token operator">:</span> <span class="token string">&quot;auth != null&quot;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>Al final de esta sección:</p> <div class="language-json extra-class"><pre class="language-json"><code><span class="token punctuation">{</span>
+  <span class="token property">&quot;rules&quot;</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">&quot;tareas-api&quot;</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">&quot;$uid&quot;</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">&quot;.write&quot;</span><span class="token operator">:</span> <span class="token string">&quot;$uid === auth.uid&quot;</span><span class="token punctuation">,</span>
+        <span class="token property">&quot;.read&quot;</span><span class="token operator">:</span> <span class="token string">&quot;$uid === auth.uid&quot;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h2 id="cargarlocalstorage"><a href="#cargarlocalstorage" class="header-anchor">#</a> cargarLocalStorage</h2> <p>Pasar la información del <code>App.vue</code> a <code>Home.vue</code></p> <div class="language-js extra-class"><pre class="language-js"><code>  methods<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span><span class="token function">mapActions</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'setTareas'</span><span class="token punctuation">,</span> <span class="token string">'cargarLocalStorage'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token function">created</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">cargarLocalStorage</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+</code></pre></div><h2 id="ruta-registro"><a href="#ruta-registro" class="header-anchor">#</a> Ruta Registro</h2> <div class="language-js extra-class"><pre class="language-js"><code>  <span class="token keyword">const</span> routes <span class="token operator">=</span> <span class="token punctuation">[</span>
+  <span class="token punctuation">{</span>
+    path<span class="token operator">:</span> <span class="token string">'/registro'</span><span class="token punctuation">,</span>
+    name<span class="token operator">:</span> <span class="token string">'Registro'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">component</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token keyword">import</span><span class="token punctuation">(</span><span class="token comment">/* webpackChunkName: &quot;about&quot; */</span> <span class="token string">'../views/Registro.vue'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">]</span>
+</code></pre></div><h2 id="registro-vue"><a href="#registro-vue" class="header-anchor">#</a> Registro.vue</h2> <div class="language-vue extra-class"><pre class="language-vue"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>my-5<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>Registro<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> 
+            <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>email<span class="token punctuation">&quot;</span></span> 
+            <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>email<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>form-control my-2<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">v-model.trim</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>email<span class="token punctuation">&quot;</span></span>
+        <span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> 
+            <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>password<span class="token punctuation">&quot;</span></span> 
+            <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>password<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>form-control my-2<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">v-model.trim</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>pass1<span class="token punctuation">&quot;</span></span>
+        <span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> 
+            <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>password<span class="token punctuation">&quot;</span></span> 
+            <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>password<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>form-control my-2<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">v-model.trim</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>pass2<span class="token punctuation">&quot;</span></span>
+        <span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> 
+            <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>submit<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>btn btn-primary<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">:disabled</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>bloquear<span class="token punctuation">&quot;</span></span>
+        <span class="token punctuation">&gt;</span></span>
+            Registro
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+    <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token punctuation">{</span>
+            email<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span>
+            pass1<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span>
+            pass2<span class="token operator">:</span> <span class="token string">''</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    computed<span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token function">bloquear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span>email<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">'@'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+                <span class="token keyword">return</span> <span class="token boolean">true</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>pass1 <span class="token operator">===</span> <span class="token keyword">this</span><span class="token punctuation">.</span>pass2 <span class="token operator">&amp;&amp;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>pass1 <span class="token operator">!==</span> <span class="token string">''</span> <span class="token operator">&amp;&amp;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>pass1<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+                <span class="token keyword">return</span> <span class="token boolean">false</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">return</span> <span class="token boolean">true</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h2 id="activar-registro-firebase"><a href="#activar-registro-firebase" class="header-anchor">#</a> Activar Registro Firebase</h2> <p>Dentro de la administración de Firebase activar &quot;Sign-in method&quot; =&gt; &quot;correo electrónico/contraseña&quot;</p> <h2 id="registrar-firebase"><a href="#registrar-firebase" class="header-anchor">#</a> Registrar Firebase</h2> <p><a href="https://firebase.google.com/docs/reference/rest/auth" target="_blank" rel="noopener noreferrer">https://firebase.google.com/docs/reference/rest/auth<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></p> <div class="language- extra-class"><pre class="language-text"><code>https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token function">createStore</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  state<span class="token operator">:</span> <span class="token punctuation">{</span>
+    user<span class="token operator">:</span> <span class="token keyword">null</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  mutations<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token function">setUser</span><span class="token punctuation">(</span><span class="token parameter">state<span class="token punctuation">,</span> payload</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      state<span class="token punctuation">.</span>user <span class="token operator">=</span> payload
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  actions<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token keyword">async</span> <span class="token function">registrarUsuario</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit <span class="token punctuation">}</span><span class="token punctuation">,</span> user</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> res <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+            method<span class="token operator">:</span> <span class="token string">'POST'</span><span class="token punctuation">,</span>
+            body<span class="token operator">:</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+                email<span class="token operator">:</span> user<span class="token punctuation">.</span>email<span class="token punctuation">,</span> 
+                password<span class="token operator">:</span> user<span class="token punctuation">.</span>password<span class="token punctuation">,</span>
+                returnSecureToken<span class="token operator">:</span> <span class="token boolean">true</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token keyword">const</span> dataDB <span class="token operator">=</span> <span class="token keyword">await</span> res<span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>dataDB<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>dataDB<span class="token punctuation">.</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">return</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>dataDB<span class="token punctuation">.</span>error<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+        <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'setUser'</span><span class="token punctuation">,</span> dataDB<span class="token punctuation">)</span>
+        router<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><div class="language-html extra-class"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> 
+  <span class="token attr-name">@submit.prevent</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>registrarUsuario({email: email, password: pass1}<span class="token punctuation">&quot;</span></span>
+<span class="token punctuation">&gt;</span></span>
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">import</span> <span class="token punctuation">{</span>mapActions<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vuex'</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+    methods<span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token operator">...</span><span class="token function">mapActions</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'registrarUsuario'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h2 id="ingreso-vue"><a href="#ingreso-vue" class="header-anchor">#</a> Ingreso.vue</h2> <div class="language-js extra-class"><pre class="language-js"><code>  <span class="token punctuation">{</span>
+    path<span class="token operator">:</span> <span class="token string">'/ingreso'</span><span class="token punctuation">,</span>
+    name<span class="token operator">:</span> <span class="token string">'Ingreso'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">component</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token keyword">import</span><span class="token punctuation">(</span><span class="token comment">/* webpackChunkName: &quot;about&quot; */</span> <span class="token string">'../views/Ingreso.vue'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+</code></pre></div><div class="language-vue extra-class"><pre class="language-vue"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>my-5<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>Registro<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">@submit.prevent</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>ingresoUsuario({email: email, password: pass1})<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> 
+            <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>email<span class="token punctuation">&quot;</span></span> 
+            <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>email<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>form-control my-2<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">v-model.trim</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>email<span class="token punctuation">&quot;</span></span>
+        <span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> 
+            <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>password<span class="token punctuation">&quot;</span></span> 
+            <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>password<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>form-control my-2<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">v-model.trim</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>pass1<span class="token punctuation">&quot;</span></span>
+        <span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> 
+            <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>submit<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>btn btn-primary<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">:disabled</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>bloquear<span class="token punctuation">&quot;</span></span>
+        <span class="token punctuation">&gt;</span></span>
+            Ingresar
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+<span class="token keyword">import</span> <span class="token punctuation">{</span>mapActions<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vuex'</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+    <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token punctuation">{</span>
+            email<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span>
+            pass1<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    computed<span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token function">bloquear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span>email<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">'@'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+                <span class="token keyword">return</span> <span class="token boolean">true</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>pass1<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+                <span class="token keyword">return</span> <span class="token boolean">false</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">return</span> <span class="token boolean">true</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    methods<span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token operator">...</span><span class="token function">mapActions</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'ingresoUsuario'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>vuex</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">async</span> <span class="token function">ingresoUsuario</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit <span class="token punctuation">}</span><span class="token punctuation">,</span> usuario</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>usuario<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+</code></pre></div><h2 id="ingresousuario-firebase"><a href="#ingresousuario-firebase" class="header-anchor">#</a> ingresoUsuario Firebase</h2> <div class="language-sh extra-class"><pre class="language-sh"><code>https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key<span class="token operator">=</span><span class="token punctuation">[</span>API_KEY<span class="token punctuation">]</span>
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">async</span> <span class="token function">ingresoUsuario</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit <span class="token punctuation">}</span><span class="token punctuation">,</span> usuario</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> res <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[API_KEY]</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        method<span class="token operator">:</span> <span class="token string">'POST'</span><span class="token punctuation">,</span>
+        body<span class="token operator">:</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            email<span class="token operator">:</span> usuario<span class="token punctuation">.</span>email<span class="token punctuation">,</span> 
+            password<span class="token operator">:</span> usuario<span class="token punctuation">.</span>password<span class="token punctuation">,</span>
+            returnSecureToken<span class="token operator">:</span> <span class="token boolean">true</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token keyword">const</span> dataDB <span class="token operator">=</span> <span class="token keyword">await</span> res<span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>dataDB<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>dataDB<span class="token punctuation">.</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>dataDB<span class="token punctuation">.</span>error<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'setUser'</span><span class="token punctuation">,</span> dataDB<span class="token punctuation">)</span>
+    router<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+</code></pre></div><h2 id="leer-doc-con-token"><a href="#leer-doc-con-token" class="header-anchor">#</a> Leer doc con token</h2> <p><a href="https://firebase.google.com/docs/database/rest/auth#authenticate_with_an_id_token" target="_blank" rel="noopener noreferrer">https://firebase.google.com/docs/database/rest/auth#authenticate_with_an_id_token<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></p> <div class="language- extra-class"><pre class="language-text"><code>&quot;https://&lt;DATABASE_NAME&gt;.firebaseio.com/users/ada/name.json?auth=&lt;ID_TOKEN&gt;&quot;
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">&lt;DATABASE_NAME&gt;.firebaseio.com/tareas-api.json?auth=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>state<span class="token punctuation">.</span>user<span class="token punctuation">.</span>idToken<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">async</span> <span class="token function">cargarLocalStorage</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit<span class="token punctuation">,</span> state <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> res <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">&lt;DATABASE_NAME&gt;.firebaseio.com/tareas-api.json?auth=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>state<span class="token punctuation">.</span>user<span class="token punctuation">.</span>idToken<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+    <span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">await</span> res<span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    
+    <span class="token keyword">const</span> arrayDatos <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> id <span class="token keyword">in</span> db<span class="token punctuation">)</span><span class="token punctuation">{</span>
+      <span class="token comment">// console.log(id)</span>
+      <span class="token comment">// console.log(db[id])</span>
+      arrayDatos<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>db<span class="token punctuation">[</span>id<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arrayDatos<span class="token punctuation">)</span>
+    <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'cargar'</span><span class="token punctuation">,</span> arrayDatos<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+</code></pre></div><h2 id="tareas-uid"><a href="#tareas-uid" class="header-anchor">#</a> Tareas UID</h2> <p><a href="https://firebase.google.com/docs/database/security" target="_blank" rel="noopener noreferrer">https://firebase.google.com/docs/database/security<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></p> <div class="language-json extra-class"><pre class="language-json"><code><span class="token punctuation">{</span>
+  <span class="token property">&quot;rules&quot;</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">&quot;tareas-api&quot;</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">&quot;$uid&quot;</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">&quot;.write&quot;</span><span class="token operator">:</span> <span class="token string">&quot;$uid === auth.uid&quot;</span><span class="token punctuation">,</span>
+        <span class="token property">&quot;.read&quot;</span><span class="token operator">:</span> <span class="token string">&quot;$uid === auth.uid&quot;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">async</span> <span class="token function">cargarLocalStorage</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit<span class="token punctuation">,</span> state <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'cargarLocalStorage'</span><span class="token punctuation">,</span> state<span class="token punctuation">)</span>
+      <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> res <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://&lt;DATABASE_NAME&gt;/tareas-api/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>state<span class="token punctuation">.</span>user<span class="token punctuation">.</span>localId<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.json?auth=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>state<span class="token punctuation">.</span>user<span class="token punctuation">.</span>idToken<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+        <span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">await</span> res<span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">const</span> arrayDatos <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span> 
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> id <span class="token keyword">in</span> db<span class="token punctuation">)</span><span class="token punctuation">{</span>
+          arrayDatos<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>db<span class="token punctuation">[</span>id<span class="token punctuation">]</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arrayDatos<span class="token punctuation">)</span>
+        <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'cargar'</span><span class="token punctuation">,</span> arrayDatos<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token keyword">async</span> <span class="token function">setTareas</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit<span class="token punctuation">,</span> state <span class="token punctuation">}</span><span class="token punctuation">,</span> tarea</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'setTareas'</span><span class="token punctuation">,</span> state<span class="token punctuation">)</span>
+      <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> res <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://&lt;DATABASE_NAME&gt;/tareas-api/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>state<span class="token punctuation">.</span>user<span class="token punctuation">.</span>localId<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>tarea<span class="token punctuation">.</span>id<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.json?auth=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>state<span class="token punctuation">.</span>user<span class="token punctuation">.</span>idToken<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+          method<span class="token operator">:</span> <span class="token string">'PUT'</span><span class="token punctuation">,</span>
+          body<span class="token operator">:</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>tarea<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">await</span> res<span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>db<span class="token punctuation">)</span>
+        <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'set'</span><span class="token punctuation">,</span> tarea<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</code></pre></div><h2 id="getters"><a href="#getters" class="header-anchor">#</a> Getters</h2> <div class="language-js extra-class"><pre class="language-js"><code>getters<span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token function">userAutenticado</span><span class="token punctuation">(</span><span class="token parameter">state</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token operator">!</span><span class="token operator">!</span>state<span class="token punctuation">.</span>user
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+</code></pre></div><h2 id="navbar"><a href="#navbar" class="header-anchor">#</a> Navbar</h2> <div class="language-vue extra-class"><pre class="language-vue"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>navbar navbar-dark bg-dark<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>router-link</span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>/<span class="token punctuation">&quot;</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>navbar-brand<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+          Formularios
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>router-link</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>d-flex<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>router-link</span> 
+            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>btn btn-dark<span class="token punctuation">&quot;</span></span> 
+            <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>/<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">v-if</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>userAutenticado<span class="token punctuation">&quot;</span></span>
+          <span class="token punctuation">&gt;</span></span>
+            Tareas
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>router-link</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span>
+            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>btn btn-dark<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">v-if</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>userAutenticado<span class="token punctuation">&quot;</span></span>
+          <span class="token punctuation">&gt;</span></span>
+            Cerrar Sesión
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>router-link</span> 
+            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>btn btn-dark<span class="token punctuation">&quot;</span></span> 
+            <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>/registro<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">v-if</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>!userAutenticado<span class="token punctuation">&quot;</span></span>
+          <span class="token punctuation">&gt;</span></span>
+            Registro
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>router-link</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>router-link</span> 
+            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>btn btn-dark<span class="token punctuation">&quot;</span></span> 
+            <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>/ingreso<span class="token punctuation">&quot;</span></span>
+            <span class="token attr-name">v-if</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>!userAutenticado<span class="token punctuation">&quot;</span></span>
+          <span class="token punctuation">&gt;</span></span>
+            Ingresar
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>router-link</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+<span class="token keyword">import</span> <span class="token punctuation">{</span> mapGetters <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vuex'</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  computed<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span><span class="token function">mapGetters</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'userAutenticado'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h2 id="cerrar-sesion"><a href="#cerrar-sesion" class="header-anchor">#</a> Cerrar Sesión</h2> <div class="language-js extra-class"><pre class="language-js"><code>actions<span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token function">cerrarSesion</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'setUser'</span><span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span>
+    router<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token string">'/ingreso'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</code></pre></div><p>Navbar.vue</p> <div class="language-vue extra-class"><pre class="language-vue"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span>
+    <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>btn btn-dark<span class="token punctuation">&quot;</span></span>
+    <span class="token attr-name">v-if</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>userAutenticado<span class="token punctuation">&quot;</span></span>
+    <span class="token attr-name">@click</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>cerrarSesion<span class="token punctuation">&quot;</span></span>
+  <span class="token punctuation">&gt;</span></span>
+    Cerrar Sesión
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">&gt;</span></span>     
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+<span class="token keyword">import</span> <span class="token punctuation">{</span> mapActions<span class="token punctuation">,</span> mapGetters <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vuex'</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  methods<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span><span class="token function">mapActions</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'cerrarSesion'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h2 id="router-guard-documentacion"><a href="#router-guard-documentacion" class="header-anchor">#</a> Router Guard (documentación)</h2> <p><a href="https://router.vuejs.org/guide/advanced/meta.html#route-meta-fields" target="_blank" rel="noopener noreferrer">https://router.vuejs.org/guide/advanced/meta.html#route-meta-fields<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></p> <p>Ejemplo Global before Guards
+<a href="https://router.vuejs.org/guide/advanced/navigation-guards.html" target="_blank" rel="noopener noreferrer">https://router.vuejs.org/guide/advanced/navigation-guards.html<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></p> <div class="language-js extra-class"><div class="highlight-lines"><br><br><br><div class="highlighted"> </div><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></div><pre class="language-js"><code><span class="token keyword">import</span> <span class="token punctuation">{</span> createRouter<span class="token punctuation">,</span> createWebHistory <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vue-router'</span>
+<span class="token keyword">import</span> Home <span class="token keyword">from</span> <span class="token string">'../views/Home.vue'</span>
+
+<span class="token keyword">import</span> store <span class="token keyword">from</span> <span class="token string">'../store'</span>
+
+<span class="token keyword">const</span> routes <span class="token operator">=</span> <span class="token punctuation">[</span>
+  <span class="token punctuation">{</span>
+    path<span class="token operator">:</span> <span class="token string">'/'</span><span class="token punctuation">,</span>
+    name<span class="token operator">:</span> <span class="token string">'Home'</span><span class="token punctuation">,</span>
+    component<span class="token operator">:</span> Home<span class="token punctuation">,</span>
+    meta<span class="token operator">:</span> <span class="token punctuation">{</span> requiresAuth<span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    path<span class="token operator">:</span> <span class="token string">'/editar/:id'</span><span class="token punctuation">,</span>
+    name<span class="token operator">:</span> <span class="token string">'Editar'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">component</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token keyword">import</span><span class="token punctuation">(</span><span class="token comment">/* webpackChunkName: &quot;about&quot; */</span> <span class="token string">'../views/Editar.vue'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    meta<span class="token operator">:</span> <span class="token punctuation">{</span> requiresAuth<span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    path<span class="token operator">:</span> <span class="token string">'/registro'</span><span class="token punctuation">,</span>
+    name<span class="token operator">:</span> <span class="token string">'Registro'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">component</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token keyword">import</span><span class="token punctuation">(</span><span class="token comment">/* webpackChunkName: &quot;about&quot; */</span> <span class="token string">'../views/Registro.vue'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    path<span class="token operator">:</span> <span class="token string">'/ingreso'</span><span class="token punctuation">,</span>
+    name<span class="token operator">:</span> <span class="token string">'Ingreso'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">component</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token keyword">import</span><span class="token punctuation">(</span><span class="token comment">/* webpackChunkName: &quot;about&quot; */</span> <span class="token string">'../views/Ingreso.vue'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">]</span>
+
+<span class="token keyword">const</span> router <span class="token operator">=</span> <span class="token function">createRouter</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  history<span class="token operator">:</span> <span class="token function">createWebHistory</span><span class="token punctuation">(</span>process<span class="token punctuation">.</span>env<span class="token punctuation">.</span><span class="token constant">BASE_URL</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  routes
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+router<span class="token punctuation">.</span><span class="token function">beforeEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">to<span class="token punctuation">,</span> <span class="token keyword">from</span><span class="token punctuation">,</span> next</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>to<span class="token punctuation">.</span>meta<span class="token punctuation">.</span>requiresAuth<span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>to<span class="token punctuation">.</span>meta<span class="token punctuation">.</span>requiresAuth<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>store<span class="token punctuation">.</span>getters<span class="token punctuation">.</span>userAutenticado<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'/ingreso'</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> router
+</code></pre></div><h2 id="localstorage"><a href="#localstorage" class="header-anchor">#</a> LocalStorage</h2> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">async</span> <span class="token function">ingresoUsuario</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit <span class="token punctuation">}</span><span class="token punctuation">,</span> usuario</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span>
+    <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'setUser'</span><span class="token punctuation">,</span> dataDB<span class="token punctuation">)</span>
+    localStorage<span class="token punctuation">.</span><span class="token function">setItem</span><span class="token punctuation">(</span><span class="token string">'user'</span><span class="token punctuation">,</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>dataDB<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    router<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token keyword">async</span> <span class="token function">registrarUsuario</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit <span class="token punctuation">}</span><span class="token punctuation">,</span> user</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span>
+    <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'setUser'</span><span class="token punctuation">,</span> dataDB<span class="token punctuation">)</span>
+    localStorage<span class="token punctuation">.</span><span class="token function">setItem</span><span class="token punctuation">(</span><span class="token string">'user'</span><span class="token punctuation">,</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>dataDB<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    router<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token keyword">async</span> <span class="token function">cargarLocalStorage</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit<span class="token punctuation">,</span> state <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>localStorage<span class="token punctuation">.</span><span class="token function">getItem</span><span class="token punctuation">(</span><span class="token string">'user'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'setUser'</span><span class="token punctuation">,</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>localStorage<span class="token punctuation">.</span><span class="token function">getItem</span><span class="token punctuation">(</span><span class="token string">'user'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'setUser'</span><span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+  <span class="token operator">...</span>
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code><span class="token function">cerrarSesion</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> commit <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">commit</span><span class="token punctuation">(</span><span class="token string">'setUser'</span><span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span>
+  localStorage<span class="token punctuation">.</span><span class="token function">removeItem</span><span class="token punctuation">(</span><span class="token string">'user'</span><span class="token punctuation">)</span>
+  router<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token string">'/ingreso'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+</code></pre></div><p>App.vue</p> <div class="language-js extra-class"><pre class="language-js"><code>methods<span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token operator">...</span><span class="token function">mapActions</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'cargarLocalStorage'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token function">created</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">cargarLocalStorage</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h2 id="deploy"><a href="#deploy" class="header-anchor">#</a> Deploy</h2> <div class="language- extra-class"><pre class="language-text"><code>npm run build
+</code></pre></div><div class="language- extra-class"><pre class="language-text"><code>npm install -g firebase-tools
+</code></pre></div><div class="language- extra-class"><pre class="language-text"><code>firebase login
+</code></pre></div><div class="language- extra-class"><pre class="language-text"><code>firebase init
+</code></pre></div><div class="language- extra-class"><pre class="language-text"><code>firebase deploy
+</code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/vue-udemy/07-01-firebase/" class="prev">
+        REST Firebase
+      </a></span> <span class="next"><a href="/vue-udemy/07-crud-firebase/">
+        CRUD Firebase (Vue.js 2)
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/vue-udemy/assets/js/app.88e7e9e2.js" defer></script><script src="/vue-udemy/assets/js/2.d8396f48.js" defer></script><script src="/vue-udemy/assets/js/14.11da6be1.js" defer></script>
+  </body>
+</html>

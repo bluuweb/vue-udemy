@@ -31,8 +31,108 @@ export default {
 </script>
 ```
 
+Input.vue
+```vue
+<template>
+    <input 
+        type="text" 
+        placeholder="Nombre Tarea"
+        class="form-control"
+        v-model.trim="tarea.nombre"
+    >
 
+    <!-- checkbox -->
+    <div class="my-2">
+        <div class="form-check form-check-inline">
+        <input 
+            type="checkbox"
+            class="form-check-input"
+            id="check-1"
+            v-model="tarea.categoria"
+            value="Javascript"
+        >
+        <label 
+            for="check-1"
+            class="form-check-label"
+        >Javascript</label>
+        </div>
+        <div class="form-check form-check-inline">
+        <input 
+            type="checkbox"
+            class="form-check-input"
+            id="check-2"
+            v-model="tarea.categoria"
+            value="Desarrollo"
+        >
+        <label 
+            for="check-2"
+            class="form-check-label"
+        >Desarrollo web</label>
+        </div>
+    </div>
 
+    <!-- radio -->
+    <div class="my-2">
+        <div class="form-check form-check-inline">
+        <input 
+            class="form-check-input" 
+            type="radio" 
+            id="inlineRadio1" 
+            value="urgente"
+            v-model="tarea.estado"
+        >
+        <label class="form-check-label" for="inlineRadio1">
+            Urgente
+        </label>
+        </div>
+
+        <div class="form-check form-check-inline">
+        <input 
+            class="form-check-input" 
+            type="radio" 
+            id="inlineRadio2" 
+            value="relax"
+            v-model="tarea.estado"
+        >
+        <label class="form-check-label" for="inlineRadio2">
+            Relax
+        </label>
+        </div>
+    </div>
+
+    <div class="my-2">
+        <input 
+        type="number"
+        class="form-control"
+        placeholder="numero"
+        v-model.number="tarea.numero"
+        >
+    </div>
+
+    <button 
+        class="btn btn-block btn-dark" 
+        type="submit"
+        :disabled="bloquear"
+    >
+        Agregar
+    </button>
+</template>
+
+<script>
+export default {
+    props: {
+        tarea: Object
+    },
+    computed: {
+        bloquear(){
+            return this.tarea.nombre.trim() === '' ? true : false
+        }
+    }
+}
+</script>
+```
+
+vuex
 ```js
 import { createStore } from 'vuex'
 
@@ -58,6 +158,7 @@ export default createStore({
 })
 ```
 
+Home.vue
 ```vue
 <script>
 import {mapActions} from 'vuex'
@@ -96,8 +197,8 @@ export default {
 ```
 
 ## Read
+ListaTareas.vue (components)
 ```vue
-// ListaTareas.vue
 <template>
   <h1>Lista de Tareas</h1>
     <table class="table">
@@ -151,8 +252,9 @@ export default {
                 <td>{{tarea.nombre}}</td>
                 <td>
                     <span v-for="(item, i) in tarea.categoria" :key="i">
-                        {{item}}
-                        {{ tarea.categoria.length > i + 1 ? ', ' : '' }}
+                        {{
+                            tarea.categoria.length  === (index + 1) ? item : item + ', ' 
+                        }}
                     </span>
                 </td>
                 <td>{{tarea.estado}}</td>
@@ -207,7 +309,7 @@ export default {
 ```
 
 ## Update
-
+ListaTareas.vue
 ```html
 <router-link
     class="btn btn-warning btn-sm"
@@ -224,7 +326,7 @@ export default {
 
 ```js
 {
-  path: '/:id',
+  path: '/editar/:id',
   name: 'Editar',
   component: () => import(/* webpackChunkName: "about" */ '../views/Editar.vue')
 }
@@ -252,6 +354,7 @@ export default createStore({
 })
 ```
 
+Ojo que si refrescas el sitio web la tarea desaparecerá, más adelante veremos como resolverlo con localStorage
 ```vue
 <template>
      {{tarea}}
@@ -272,6 +375,23 @@ export default {
     }
 }
 </script>
+```
+
+Vuex
+```js
+// importar
+import router from '../router'
+
+//mutations
+update(state, payload) {
+  state.tareas = state.tareas.map(item => item.id === payload.id ? payload : item)
+}
+
+//Actions
+updateTarea({ commit }, tarea) {
+  commit('update', tarea)
+  router.push('/')
+}
 ```
 
 Agregar Formulario
@@ -296,10 +416,7 @@ export default {
         Input
     },
     computed: {
-        ...mapState(['tarea']),
-        bloquear(){
-            return this.tarea.nombre.trim() === '' ? true : false
-        }
+        ...mapState(['tarea'])
     },
     methods: {
         ...mapActions(['setTarea', 'updateTarea'])
