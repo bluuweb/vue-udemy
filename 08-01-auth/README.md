@@ -564,44 +564,229 @@ firebase init
 firebase deploy
 ```
 
+## Errores
+Podemos manejar los errores del formulario:
 
-
-<!-- ## Router Editar
+Vuex
 ```js
-import { createRouter, createWebHistory } from 'vue-router'
-import store from '../store'
+state: {
+    error: {tipo: null, mensaje: ''}
+},
+mutations: {
+    setError(state, payload) {
+      console.log(payload)
+      // REINICIAR
+      if (payload === null) {
+        return state.error = {tipo: null, mensaje: ''}
+      }
+      // LOGIN
+      if (payload === "EMAIL_NOT_FOUND") {
+        return state.error = {
+          tipo: 'email',
+          mensaje: 'Email no registrado'
+        }
+      }
+      // LOGIN
+      if (payload === "INVALID_PASSWORD") {
+        return state.error = {
+          tipo: 'password',
+          mensaje: 'Contraseña no válida'
+        }
+      }
+      // LOGIN
+      if (payload === "EMAIL_EXISTS") {
+        return state.error = {
+          tipo: 'email',
+          mensaje: 'Email ya registrado'
+        }
+      }
+      // REGISTRO
+      if (payload === "INVALID_EMAIL") {
+        return state.error = {
+          tipo: 'email',
+          mensaje: 'Formato email no válido'
+        }
+      }
+    }
+}
+```
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/editar',
-    name: 'Editar-dos',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/editar/:id',
-    name: 'Editar',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Editar.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/registro',
-    name: 'Registro',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Registro.vue')
-  },
-  {
-    path: '/ingreso',
-    name: 'Ingreso',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Ingreso.vue')
-  }
-]
-``` -->
+```js
+async ingresoUsuario({ commit }, usuario) {
+      try {
+        ...
+        if (dataDB.error) {
+          console.log(dataDB.error)
+          return commit('setError', dataDB.error.message)
+        }
+        commit('setUser', dataDB)
+        commit('setError', null)
+        localStorage.setItem('user', JSON.stringify(dataDB))
+        router.push('/')
+      } catch (error) {
+          console.log(error)
+      }
+    },
+    async registrarUsuario({ commit }, user) {
+      try {
+        ...
+        if (dataDB.error) {
+          console.log(dataDB.error)
+          return commit('setError', dataDB.error.message)
+        }
+        commit('setUser', dataDB)
+        commit('setError', null)
+        localStorage.setItem('user', JSON.stringify(dataDB))
+        router.push('/')
+      } catch (error) {
+          console.log(error)
+      }
+    },
+```
+
+Ingreso.vue
+```vue
+<template>
+  <h1 class="my-5">Ingreso de Usuarios</h1>
+  <div class="alert alert-warning" v-if="error.tipo !== null">
+      {{error.mensaje}}
+  </div>
+  <form @submit.prevent="procesarFormulario">
+        <input 
+            type="email" 
+            placeholder="email"
+            class="form-control my-2"
+            v-model.trim="email"
+            :class="[error.tipo === 'email' ? 'is-invalid' : '']"
+        >
+        <input 
+            type="password" 
+            placeholder="password"
+            class="form-control my-2"
+            v-model.trim="pass1"
+            :class="[error.tipo === 'password' ? 'is-invalid' : '']"
+        >
+        <button 
+            type="submit"
+            class="btn btn-primary"
+            :disabled="bloquear"
+        >
+        Ingresar
+        </button>
+  </form>
+</template>
+
+<script>
+import { mapActions } from 'vuex'
+export default {
+    data() {
+        return {
+            email: '',
+            pass1: '',
+        }
+    },
+    computed: {
+        bloquear(){
+            if(!this.email.includes('@')){
+                return true
+            }
+            if(this.pass1.length > 5){
+                return false
+            }
+            return true
+        },
+        ...mapState(['error'])
+    },
+    methods: {
+        ...mapActions(['ingresoUsuario']),
+        procesarFormulario(){
+            await this.ingresoUsuario({email: this.email, password: this.pass1})
+            if(this.error.tipo !== null){
+                return
+            }
+            this.email = '';
+            this.pass1 = '';
+        }
+    }
+}
+</script>
+```
+
+Registro.vue
+```vue
+<template>
+  <h1 class="my-5">Registro de Usuarios</h1>
+  <div class="alert alert-warning" v-if="error.tipo !== null">
+      {{error.mensaje}}
+  </div>
+  <form @submit.prevent="procesarFormulario">
+        <input 
+            type="email" 
+            placeholder="email"
+            class="form-control my-2"
+            v-model.trim="email"
+            :class="[error.tipo === 'email' ? 'is-invalid' : '']"
+        >
+        <input 
+            type="password" 
+            placeholder="password"
+            class="form-control my-2"
+            v-model.trim="pass1"
+        >
+        <input 
+            type="password" 
+            placeholder="password"
+            class="form-control my-2"
+            v-model.trim="pass2"
+        >
+        <button 
+            type="submit"
+            class="btn btn-primary"
+            :disabled="bloquear"
+        >
+        Registrar
+        </button>
+  </form>
+</template>
+
+<script>
+import { mapActions } from 'vuex'
+export default {
+    data() {
+        return {
+            email: '',
+            pass1: '',
+            pass2: ''
+        }
+    },
+    computed: {
+        bloquear(){
+            if(!this.email.includes('@')){
+                return true
+            }
+            if(this.pass1.length > 5 && this.pass1 === this.pass2){
+                return false
+            }
+            return true
+        },
+        ...mapState(['error'])
+    },
+    methods: {
+        ...mapActions(['registrarUsuario']),
+        procesarFormulario(){
+            await this.registrarUsuario({email: this.email, password: this.pass1})
+            if(this.error.tipo !== null){
+                return
+            }
+            this.email = '';
+            this.pass1 = '';
+            this.pass2 = '';
+        }
+    }
+}
+</script>
+```
+
 
 
 
