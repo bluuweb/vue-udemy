@@ -25,6 +25,7 @@ module.exports = {
         '/06-crud/',
         '/07-01-firebase/',
         '/08-01-auth/',
+        '/20-composition/',
         '/07-crud-firebase/',
         '/08-auth-firebase/',
         '/09-auth-firestore/',

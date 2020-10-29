@@ -1,4 +1,6 @@
 # Composition API
+[https://v3.vuejs.org/guide/composition-api-introduction.html#why-composition-api](https://v3.vuejs.org/guide/composition-api-introduction.html#why-composition-api)
+
 Es una alternativa que podrá solucionar diferentes problemas de Vue 2: 
 
 - Legibilidad cuando nuestros componentes son muy grandes
@@ -6,26 +8,69 @@ Es una alternativa que podrá solucionar diferentes problemas de Vue 2:
 - Soporte limitado para TypeScript
 
 ## Cuando utilizarla
-- Cuando necesitas una compatibilidad al 100% de TypeScript
-- El componente es demaciado grande y necesitas organizar por función
-- Necesitas reutilizar código de otros componentes
+- Cuando necesitas una compatibilidad al 100% de TypeScript.
+- El componente es demasiado grande y necesitas organizar por función.
+- Necesitas reutilizar código de otros componentes.
+
+## API de opciones
+Disponible para Vue 2 como Vue 3
+```vue
+<template>
+  <div class="home">
+    <h1
+      :style="{'color': color}"
+    >
+      Contador: {{contador}}
+    </h1>
+    <button @click="aumentar">+</button>
+    <button @click="disminuir">-</button>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      contador: 0
+    }
+  },
+  methods: {
+    aumentar(){
+      this.contador ++
+    },
+    disminuir(){
+      this.contador --
+    }
+  },
+  computed: {
+    color(){
+      if(this.contador < 0) {
+        return 'red'
+      }else{
+        return 'blue'
+      }
+    }
+  }
+}
+</script>
+```
 
 ## setup()
 La setup se ejecuta antes de que se cree el componente, una vez que props se resuelven, y sirve como punto de entrada para las API de composición.
 
 ```vue
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <h2>{{contador}}</h2>
+  <div class="about">
+    <h1>
+      contador {{contador}}
+    </h1>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue';
 export default {
   setup() {
-    const contador = ref(5);
+    const contador = 0;
     return {contador}
   }
 };
@@ -42,7 +87,7 @@ ref toma el argumento y lo devuelve envuelto dentro de un objeto con una value p
 import { ref } from 'vue';
 export default {
   setup() {
-    const contador = ref(5);
+    const contador = ref(0)
     console.log(contador.value)
     return {contador}
   }
@@ -54,65 +99,246 @@ export default {
 
 ```vue
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <h2>{{ contador }}</h2>
-    <button @click="incrementar">Aumentar</button>
+  <div class="about">
+    <h1>
+      contador {{contador}}
+    </h1>
+    <button @click="aumentar">+</button>
+    <button @click="disminuir">-</button>
   </div>
 </template>
 
 <script>
 import { ref } from 'vue'
-
 export default {
   setup(){
-    const contador = ref(5)
+    const contador = ref(0)
 
-    function incrementar() {
+    const aumentar = () => {
       contador.value ++
     }
 
-    return {contador, incrementar}
+    const disminuir = () => {
+      contador.value --
+    }
+    
+    return {contador, aumentar, disminuir}
   }
 }
 </script>
 ```
 
-Hasta el momento también funcionan las funciones de flecha.
-```js
-const incrementar = () => {
-    contador.value ++
-}
-```
-
 ## Computed
 ```vue
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <h2>{{ contador }}</h2>
-    <button @click="incrementar" :disabled="bloquear">Aumentar</button>
-    <h3>Aumento máximo 10, quedan {{10 - contador}}</h3>
+  <div class="about">
+    <h1
+      :style="{'color': color}"
+    >
+      contador {{contador}}
+    </h1>
+    <button @click="aumentar">+</button>
+    <button @click="disminuir">-</button>
   </div>
 </template>
 
 <script>
 import { computed, ref } from 'vue'
-
 export default {
   setup(){
-    const contador = ref(5)
+    const contador = ref(0)
 
-    const bloquear = computed(() => {
-      return 10 === contador.value ? true : false
-    })
-
-    const incrementar = () => {
+    const aumentar = () => {
       contador.value ++
     }
 
-    return {contador, incrementar, bloquear}
+    const disminuir = () => {
+      contador.value --
+    }
+
+    const color = computed(() => {
+      if(contador.value < 0){
+        return 'red'
+      }else{
+        return 'blue'
+      }
+    })
+    
+    return {contador, aumentar, disminuir, color}
   }
+}
+</script>
+```
+
+## v-model
+```vue
+<template>
+  <div class="about">
+    <h1
+      :style="{'color': color}"
+    >
+      contador {{contador}}
+    </h1>
+    <button @click="aumentar">+</button>
+    <button @click="disminuir">-</button>
+    
+    <hr>
+    <input type="text" v-model="texto">
+    <p>{{texto}}</p>
+  </div>
+</template>
+
+<script>
+import { computed, ref } from 'vue'
+export default {
+  setup(){
+    const contador = ref(0)
+    const texto = ref('')
+
+    const aumentar = () => {
+      contador.value ++
+    }
+
+    const disminuir = () => {
+      contador.value --
+    }
+
+    const color = computed(() => {
+      if(contador.value < 0){
+        return 'red'
+      }else{
+        return 'blue'
+      }
+    })
+    
+    return {contador, aumentar, disminuir, color, texto}
+  }
+}
+</script>
+```
+
+## props
+components/Titulo.vue
+```vue
+<template>
+    <h1
+      :style="{'color': color}"
+    >
+      contador {{signoPeso}}
+    </h1>
+</template>
+
+<script>
+import { computed } from 'vue'
+export default {
+    props: ['color', 'contador'],
+    
+    setup(props){
+        const signoPeso = computed(() => {
+            return '$ ' + props.contador
+        })
+
+        return {signoPeso}
+    
+    }
+}
+</script>
+```
+
+About.vue
+```vue
+<template>
+  <div class="about">
+
+    <Titulo :contador="contador" :color="color" />
+    ...
+  </div>
+</template>
+
+<script>
+import Titulo from '../components/Titulo'
+import { computed, ref } from 'vue'
+export default {
+  components: {
+    Titulo
+  },
+  setup(){
+    
+    ...
+    
+    return {contador, aumentar, disminuir, color, texto}
+  }
+}
+</script>
+```
+
+## Custom Events
+[https://v3.vuejs.org/guide/composition-api-setup.html#arguments](https://v3.vuejs.org/guide/composition-api-setup.html#arguments)
+```html
+<Btn :textoBoton="'Aumentar'" @accion="aumentar" />
+<Btn :textoBoton="'Disminuir'" @accion="disminuir" />
+```
+
+Btn.vue
+```vue
+<template>
+<!-- <button @click="$emit('accion')">{{textoBoton}}</button> -->
+  <button @click="accionBoton">{{textoBoton}}</button>
+</template>
+
+<script>
+export default {
+    props: ['textoBoton'],
+    setup(props, context){
+
+        const accionBoton = () => {
+            context.emit('accion')
+        }
+
+        return {accionBoton}
+    }
+}
+</script>
+```
+
+## Reutilización
+Llamados como Hooks o Composables.
+
+contadorHook.js
+```js
+import { ref } from 'vue'
+export function contadorHook() {
+    const contador = ref(0)
+
+    const aumentar = () => {
+      contador.value ++
+    }
+
+    const disminuir = () => {
+      contador.value --
+    }
+    
+    return {contador, aumentar, disminuir}
+}
+```
+
+Contador.vue
+```vue
+<template>
+  <div class="about">
+    <h1>Contador {{contador}}</h1>
+    <button @click="aumentar">+</button>
+    <button @click="disminuir">-</button>
+  </div>
+</template>
+
+<script>
+import {contadorHook} from '../hooks/contadorHook'
+export default {
+    setup(){
+        // console.log(contadorHook())
+        return {...contadorHook()}
+    }
 }
 </script>
 ```
@@ -166,3 +392,213 @@ Como vemos faltan "beforeCreate" y "created" los cuales no son necesarios en la 
 
 Por lo tanto el llamado a las apis irian dentro del setup() sin necesidad de un ciclo de vida en particular.
 
+## Consumir API
+[https://restcountries.eu/](https://restcountries.eu/)
+
+Paises.vue
+```vue
+<template>
+  <h1>API País</h1>
+  <p v-for="(pais, index) in arrayData" :key="index">
+      {{pais.name}}
+  </p>
+</template>
+
+<script>
+import { ref } from 'vue'
+export default {
+    setup(){
+        const arrayData = ref([])
+        
+        onMounted(async() => {    
+            try {
+                const res = await fetch('api.json')
+                arrayData.value = await res.json()
+            } catch (error) {
+                console.log(error)
+            }
+        })
+        
+        return {arrayData}
+    }
+}
+</script>
+```
+
+Router
+```js{4}
+{
+  path: '/paises/:nombre',
+  name: 'Pais',
+  props: true,
+  component: () => import(/* webpackChunkName: "Paises" */ '../views/Pais.vue')
+}
+```
+
+Router-link
+```html
+<template>
+  <h1>API País</h1>
+  <p v-for="(pais, index) in arrayData" :key="index">
+      <router-link :to="`/paises/${pais.name}`">
+        {{pais.name}}
+      </router-link>
+  </p>
+</template>
+```
+
+Hook/fetchData.js
+```js
+import { onMounted, ref } from 'vue'
+export function fetchData(url) {
+    const arrayData = ref([])
+        
+    onMounted(async() => {    
+        try {
+            const res = await fetch(url)
+            arrayData.value = await res.json()
+        } catch (error) {
+            console.log(error)
+        }
+    })
+    
+    return {arrayData}
+}
+```
+
+Paises.vue
+```vue
+<template>
+  <h1>API País</h1>
+  <p v-for="(pais, index) in arrayData" :key="index">
+      <router-link :to="`/paises/${pais.name}`">
+        {{pais.name}}
+      </router-link>
+  </p>
+</template>
+
+<script>
+import {fetchData} from '../hooks/fetchData'
+export default {
+    setup(){
+        return {...fetchData('api.json')}
+    }
+}
+</script>
+```
+
+Pais.vue
+```vue
+<template>
+  <h1>Detalle País</h1>
+  {{$route.params.nombre}}
+  {{nombre}}
+  <p v-for="(pais, index) in arrayData" :key="index">  
+    {{pais.name}} - {{pais.region}} <br>
+    {{pais.population}}
+  </p>
+</template>
+
+<script>
+import {fetchData} from '../hooks/fetchData'
+export default {
+    props: ['nombre'],
+    setup(props){
+        console.log(props.nombre)
+        const {arrayData} = fetchData(`https://restcountries.eu/rest/v2/name/${props.nombre}`)
+        return {arrayData}
+    }
+}
+</script>
+```
+
+## useRoute
+```vue
+<script>
+import {fetchData} from '../hooks/fetchData'
+import {useRoute} from 'vue-router'
+export default {
+    props: ['nombre'],
+    setup(props){
+
+        const route = useRoute();
+        console.log(route.params.nombre)
+
+        const {arrayData} = fetchData(`https://restcountries.eu/rest/v2/name/${route.params.nombre}`)
+        
+        return {arrayData}
+    }
+}
+</script>
+```
+
+
+## Vue Router
+
+404
+[https://www.vuemastery.com/blog/vue-router-a-tutorial-for-vue-3/](https://www.vuemastery.com/blog/vue-router-a-tutorial-for-vue-3/)
+
+## Vuex
+```js
+import { createStore } from 'vuex'
+
+export default createStore({
+  state: {
+    usuario: {
+      nombre: 'Ignacio',
+      email: 'ignacio@prueba.com'
+    }
+  },
+  mutations: {
+    setUsuario(state, payload) {
+      state.usuario = payload
+    }
+  },
+  actions: {
+    agregarUsuario({ commit }, usuario) {
+      commit('setUsuario', usuario)
+    }
+  },
+  modules: {
+  }
+})
+```
+
+Home.vue
+```vue
+<template>
+  <div class="home">
+    <p>Usuario: {{usuario.nombre}}</p>
+    <p>Email: {{usuario.email}}</p>
+    <form @submit.prevent="procesarFormulario">
+      <input type="text" v-model="nombre">
+      <input type="text" v-model="email">
+      <button>Agregar</button>
+    </form>
+  </div>
+</template>
+
+<script>
+import { computed, ref } from 'vue'
+import {useStore} from 'vuex'
+export default {
+ setup(){
+   const store = useStore()
+   console.log(store.state.usuario)
+
+   const nombre = ref('')
+   const email = ref('')
+
+   const procesarFormulario = () => {
+     store.dispatch('agregarUsuario', {nombre: nombre.value, email: email.value})
+   }
+
+   const usuario = computed(() => {
+     return store.state.usuario
+   })
+
+   return {nombre, email, procesarFormulario, usuario}
+ }
+}
+</script>
+```
