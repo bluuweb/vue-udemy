@@ -343,6 +343,40 @@ export default {
 </script>
 ```
 
+## Export vs Export Default
+- [https://medium.com/@etherealm/named-export-vs-default-export-in-es6-affb483a0910](https://medium.com/@etherealm/named-export-vs-default-export-in-es6-affb483a0910)
+
+Puede que confunda a veces que opción utilizar cuando reutilizamos nuestras funciones, las dos son válidas y aquí trato de explicar sus dos implementaciones:
+
+- export: Se pueden exportar más de una función por archivo, por ende al momento de llamar (importar) tenemos que utilizar ``{}`` y el nombre utilizado, en este caso sería `{contadorHook}`
+```js
+import { ref } from 'vue'
+export function contadorHook() {
+    ...   
+    return {contador, aumentar, disminuir}
+}
+```
+
+```js
+import {contadorHook} from '../hooks/contadorHook'
+```
+
+- export default: Solo permite una exportación por archivo y puede recibir un nombre o no la función, como vemos a continuación, pero lo importante es que al momento de importar ya no utilizamos las ``{}``
+```js
+import { ref } from 'vue'
+
+// el nombre contadorHook es opcional -> se podría omitir:
+// export default function () {
+export default function contadorHook() {
+    ...   
+    return {contador, aumentar, disminuir}
+}
+```
+
+```js
+import contadorHook from '../hooks/contadorHook'
+```
+
 ## Ciclo de vida de Vue
 [https://v3.vuejs.org/guide/composition-api-lifecycle-hooks.html](https://v3.vuejs.org/guide/composition-api-lifecycle-hooks.html)
 Los enlaces de ciclo de vida en la API de composición tienen el mismo nombre que la API de opciones, pero tienen el prefijo on:
@@ -537,68 +571,3 @@ export default {
 
 404
 [https://www.vuemastery.com/blog/vue-router-a-tutorial-for-vue-3/](https://www.vuemastery.com/blog/vue-router-a-tutorial-for-vue-3/)
-
-## Vuex
-```js
-import { createStore } from 'vuex'
-
-export default createStore({
-  state: {
-    usuario: {
-      nombre: 'Ignacio',
-      email: 'ignacio@prueba.com'
-    }
-  },
-  mutations: {
-    setUsuario(state, payload) {
-      state.usuario = payload
-    }
-  },
-  actions: {
-    agregarUsuario({ commit }, usuario) {
-      commit('setUsuario', usuario)
-    }
-  },
-  modules: {
-  }
-})
-```
-
-Home.vue
-```vue
-<template>
-  <div class="home">
-    <p>Usuario: {{usuario.nombre}}</p>
-    <p>Email: {{usuario.email}}</p>
-    <form @submit.prevent="procesarFormulario">
-      <input type="text" v-model="nombre">
-      <input type="text" v-model="email">
-      <button>Agregar</button>
-    </form>
-  </div>
-</template>
-
-<script>
-import { computed, ref } from 'vue'
-import {useStore} from 'vuex'
-export default {
- setup(){
-   const store = useStore()
-   console.log(store.state.usuario)
-
-   const nombre = ref('')
-   const email = ref('')
-
-   const procesarFormulario = () => {
-     store.dispatch('agregarUsuario', {nombre: nombre.value, email: email.value})
-   }
-
-   const usuario = computed(() => {
-     return store.state.usuario
-   })
-
-   return {nombre, email, procesarFormulario, usuario}
- }
-}
-</script>
-```
