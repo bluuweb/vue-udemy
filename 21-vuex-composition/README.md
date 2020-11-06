@@ -206,7 +206,7 @@ export default {
 ## Buscardor.vue
 Vuex
 ```js
-async filtroName({ commit, state, dispatch }, name) {
+filtroName({ commit, state }, name) {
   const filtro = state.paises.filter((pais) => {
     let nombreApi = pais.name.toLowerCase();
     let nombreInput = name.toLowerCase();
