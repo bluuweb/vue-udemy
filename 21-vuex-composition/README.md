@@ -203,7 +203,22 @@ export default {
 </style>
 ```
 
-## Buscardo.vue
+## Buscardor.vue
+Vuex
+```js
+async filtroName({ commit, state, dispatch }, name) {
+  const filtro = state.paises.filter((pais) => {
+    let nombreApi = pais.name.toLowerCase();
+    let nombreInput = name.toLowerCase();
+    if (nombreApi.includes(nombreInput)) {
+      return pais;
+    }
+  });
+  // console.log(filtro)
+  commit("setPaisesFiltrados", filtro);
+},
+```
+
 ```vue
 <template>
     <input
