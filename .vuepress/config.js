@@ -27,6 +27,7 @@ module.exports = {
         '/08-01-auth/',
         '/20-composition/',
         '/21-vuex-composition/',
+        '/22-provide/',
         '/07-crud-firebase/',
         '/08-auth-firebase/',
         '/09-auth-firestore/',
