@@ -119,7 +119,54 @@ export default {
 </script>
 ```
 
-## Práctica ToDo
+## ToDo APP
+
+- [Bootstrap](https://getbootstrap.com/)
+- [CDN Font Awesome](https://cdnjs.com/libraries/font-awesome)
+- [icons/check-circle](https://fontawesome.com/icons/check-circle?style=solid)
+- [icons/minus-circle](https://fontawesome.com/icons/minus-circle?style=solid)
+- [icons/undo-alt](https://fontawesome.com/icons/undo-alt?style=solid)
+- [DOMContentLoaded](https://developer.mozilla.org/es/docs/Web/Events/DOMContentLoaded)
+- [classList](https://developer.mozilla.org/es/docs/Web/API/Element/classList)
+- [HTMLElement/style](https://developer.mozilla.org/es/docs/Web/API/HTMLElement/style)
+- [text-decoration](https://www.w3schools.com/cssref/tryit.asp?filename=trycss_text-decoration)
+- [localStorage](https://developer.mozilla.org/es/docs/Web/API/Window/localStorage)
+- [JSON/parse](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/JSON/parse)
+- [JSON/stringify](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/JSON/stringify)
+- [Tutorial LocalStorage bluuweb 🙌](https://www.youtube.com/watch?v=7hR7oTpDukc)
+
+## ToDo Object
+Utilizaremos una colección de objetos. (también puedes utilizar un array 🐱‍👤)
+
+- [Guía Objetos JS](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects)
+
+```js
+// Objeto con index
+// Colecciones de datos ordenados por un valor de índice
+let todos = {
+  1: { nombre: "item 1" },
+  2: { nombre: "item 2" },
+};
+
+// Recorrer objetos
+for (const key in todos) {
+  if (todos.hasOwnProperty(key)) {
+    const element = todos[key];
+    console.log(element);
+  }
+}
+
+// forEach en objetos
+Object.values(todos).forEach((item) => console.log(item));
+
+// Acceder al elemento según su indice
+console.log(todos[1]);
+
+// Nos sirve para contar elementos
+console.log(Object.keys(todos).length);
+```
+
+## ToDo Vue
 
 App.vue
 ```vue
