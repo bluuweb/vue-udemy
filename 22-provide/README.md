@@ -126,45 +126,12 @@ export default {
 - [icons/check-circle](https://fontawesome.com/icons/check-circle?style=solid)
 - [icons/minus-circle](https://fontawesome.com/icons/minus-circle?style=solid)
 - [icons/undo-alt](https://fontawesome.com/icons/undo-alt?style=solid)
-- [DOMContentLoaded](https://developer.mozilla.org/es/docs/Web/Events/DOMContentLoaded)
-- [classList](https://developer.mozilla.org/es/docs/Web/API/Element/classList)
-- [HTMLElement/style](https://developer.mozilla.org/es/docs/Web/API/HTMLElement/style)
 - [text-decoration](https://www.w3schools.com/cssref/tryit.asp?filename=trycss_text-decoration)
 - [localStorage](https://developer.mozilla.org/es/docs/Web/API/Window/localStorage)
 - [JSON/parse](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/JSON/parse)
 - [JSON/stringify](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/JSON/stringify)
 - [Tutorial LocalStorage bluuweb 🙌](https://www.youtube.com/watch?v=7hR7oTpDukc)
 
-## ToDo Object
-Utilizaremos una colección de objetos. (también puedes utilizar un array 🐱‍👤)
-
-- [Guía Objetos JS](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects)
-
-```js
-// Objeto con index
-// Colecciones de datos ordenados por un valor de índice
-let todos = {
-  1: { nombre: "item 1" },
-  2: { nombre: "item 2" },
-};
-
-// Recorrer objetos
-for (const key in todos) {
-  if (todos.hasOwnProperty(key)) {
-    const element = todos[key];
-    console.log(element);
-  }
-}
-
-// forEach en objetos
-Object.values(todos).forEach((item) => console.log(item));
-
-// Acceder al elemento según su indice
-console.log(todos[1]);
-
-// Nos sirve para contar elementos
-console.log(Object.keys(todos).length);
-```
 
 ## ToDo Vue
 
@@ -196,7 +163,7 @@ TareaApp.vue
 
     <div 
         class="alert alert-dark mt-3"
-        v-if="Object.keys(tareas).length === 0"
+        v-if="tareas.length === 0"
     >
         No hay tareas 😍
     </div>
@@ -218,15 +185,17 @@ export default {
         TareaItem
     },
     setup(){
-        const tareas = ref({})
+        const tareas = ref([])
+
         provide('tareas', tareas)
 
         if(localStorage.getItem('tareas')){
-        tareas.value = JSON.parse(localStorage.getItem('tareas'))
+            const tareasLocalStorage = JSON.parse(localStorage.getItem('tareas'))
+            tareas.value = tareasLocalStorage
         }
 
         watchEffect(() => {
-        localStorage.setItem('tareas', JSON.stringify(tareas.value))
+            localStorage.setItem('tareas', JSON.stringify(tareas.value))
         })
 
         return {tareas}
@@ -266,7 +235,7 @@ export default {
             }
 
             texto.value = ''
-            tareas.value[tarea.id] = tarea
+            tareas.value.push(tarea)
         }
         return {texto, agregarTarea}
     }
@@ -298,6 +267,7 @@ TareaItem.vue
       ></i>
     </h3>
   </div>
+
 </template>
 
 <script>
@@ -310,12 +280,16 @@ export default {
     const tareas = inject("tareas");
 
     const eliminarTarea = (id) => {
-      // console.log(id)
-      delete tareas.value[id];
+      tareas.value = tareas.value.filter(tarea => tarea.id !== id)
     };
 
     const accionTarea = (id) => {
-      tareas.value[id].estado = !tareas.value[id].estado;
+      tareas.value = tareas.value.map(tarea => {
+        if(tarea.id === id){
+          tarea.estado = !tarea.estado
+        }
+        return tarea
+      })
     };
 
     return { eliminarTarea, accionTarea };
@@ -328,5 +302,4 @@ export default {
   text-decoration: line-through;
 }
 </style>
-
 ```
