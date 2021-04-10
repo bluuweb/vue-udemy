@@ -10,6 +10,11 @@ Comparto las extensiones de VSCode de esta sección:
 
 ## script setup
 El `<script setup>` genera automaticamente el return al trabajando con Composition API
+
+:::warning
+Aún script setup NO está 100% estable por ende <b>no se recomienda en producción.</b>
+:::
+
 ```vue{8}
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
@@ -212,7 +217,7 @@ Es común que los componentes necesiten realizar algún tipo de solicitud asincr
 
 El componente ``<suspense>`` proporciona una alternativa, lo que permite que la espera se maneje más arriba en el árbol de componentes en lugar de en cada componente individual.
 
-- [pokeapi.co](pokeapi.co)
+- [pokeapi.co](https://pokeapi.co/)
 
 :::warning
 pokeapi.co es gratuita, por ende si se llegan hacer muchas peticiones en el mes puede encontrar el servidor caído, para trabajar tranquilos probar la api a principios de mes.

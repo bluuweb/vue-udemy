@@ -2,6 +2,10 @@
 
 Vamos a comenzar a trabajar con Firestore.
 
+:::danger
+Cuidado al utilizar ``<script setup>`` ya que aún está en beta, y no se recomienda para producción. Podría traer problemas al desplegar su aplicación en Firebase. Esperemos que a futuro esté estable.
+:::
+
 ## VSCode
 
 Comparto las extensiones de VSCode de esta sección:
@@ -10,6 +14,11 @@ Comparto las extensiones de VSCode de esta sección:
 - [Inteligencia Artificial](https://marketplace.visualstudio.com/items?itemName=TabNine.tabnine-vscode)
 - [Firebase Rules](https://marketplace.visualstudio.com/items?itemName=toba.vsfire)
 - [Bracket color](https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer-2)
+
+## Repo
+
+- [Repo con script setup](https://github.com/bluuweb/auth-gmail-vue-3/tree/02-firestore)
+- [Repo sin script setup](https://github.com/bluuweb/firestore-auth-setup-tradicional-vue3)
 
 ## Instalación
 
@@ -31,27 +40,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 createApp(App).use(router).mount("#app");
 ```
-
-<!-- ## .env
-
-- [cli-environment-variables](https://cli.vuejs.org/guide/mode-and-env.html#environment-variables)
-
-:::warning
-¡No almacene ningún secreto (como claves API privadas) en su aplicación!
-
-Las variables de entorno están integradas en la compilación, lo que significa que cualquiera puede verlas inspeccionando los archivos de su aplicación.
-
-<b>PD: Las API KEY de Firebase son públicas.</b>
-:::
-
-```
-VUE_APP_apiKey=xxx,
-VUE_APP_authDomain=xxx,
-VUE_APP_projectId=xxx,
-VUE_APP_storageBucket=xxx,
-VUE_APP_messagingSenderId=xxx,
-VUE_APP_appId=xxx
-``` -->
 
 ## Firebase config
 
@@ -390,10 +378,7 @@ export const useGetTodosHook = () => {
   const getTodos = async () => {
     try {
       cargando.value = true;
-      const res = await db
-        .collection("todos")
-        .where("uid", "==", user.value.uid)
-        .get();
+      const res = await db.collection("todos").get();
       return res.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     } catch (error) {
       console.log(error);
@@ -428,15 +413,26 @@ import { useAuth } from "@vueuse/firebase";
 import { useGetTodosHook } from "../composables/useGetTodosHook";
 import { onMounted, ref } from "vue";
 
-const { isAuthenticated } = useAuth();
-const { getTodos, cargando } = useGetTodosHook();
-const todos = ref([]);
+export default {
+  components: { Cargando, TodoForm, Error, Todo },
+  setup() {
+    const { isAuthenticated, user } = useAuth();
+    const { getTodos, cargando } = useTodos();
+    const todos = ref([]);
 
-provide("todos", todos);
+    provide("todos", todos);
 
-onMounted(async () => {
-  todos.value = await getTodos();
-});
+    onMounted(async () => {
+      todos.value = await getTodos();
+    });
+
+    return {
+      isAuthenticated,
+      cargando,
+      todos,
+    };
+  },
+};
 </script>
 ```
 
@@ -507,18 +503,27 @@ TodoForm.vue
 import { inject, ref } from "vue";
 import { useGetTodosHook } from "../composables/useGetTodosHook";
 
-const todos = inject("todos");
-const { agregarTodo } = useGetTodosHook();
-const texto = ref("");
+export default {
+  setup() {
+    const { agregarTodo } = useTodos();
 
-const procesarFormulario = async () => {
-  if (!texto.value.trim()) {
-    return console.log("texto vacio");
-  }
-  const todo = await agregarTodo(texto.value);
-  console.log(todo);
-  todos.value = [...todos.value, todo];
-  texto.value = "";
+    const texto = ref("");
+    const todos = inject("todos");
+
+    const procesarFormulario = async () => {
+      if (!texto.value.trim()) {
+        console.log("texto vacio");
+        return;
+      }
+
+      const todo = await agregarTodo(texto.value);
+
+      todos.value = [...todos.value, todo];
+      texto.value = "";
+    };
+
+    return { texto, procesarFormulario };
+  },
 };
 </script>
 ```
@@ -539,28 +544,74 @@ const procesarFormulario = async () => {
   </div>
 </template>
 
-<script setup>
+<script>
 import { inject } from "vue";
 
-const error = inject("error");
+export default {
+  setup() {
+    const error = inject("error");
+    return { error };
+  },
+};
 </script>
 ```
 
 Crud.vue
 
-```html
-<div v-else>
-  <Error v-if="pintarError" />
-  <TodoForm />
-  <pre>{{todos}}</pre>
-</div>
-```
+```vue
+<template>
+  <div v-if="isAuthenticated">
+    <h1>Crud Firestore</h1>
+    <hr />
+    <div v-if="cargando">
+      <Cargando />
+    </div>
+    <div v-else>
+      <Error v-if="pintarError" />
+      <TodoForm />
+      <Todo v-for="todo in todos" :key="todo.id" :todo="todo" />
+    </div>
+  </div>
+</template>
 
-```js
-import Error from "../components/Error";
-provide("error", error);
+<script>
+import Cargando from "@/components/Cargando";
+import TodoForm from "@/components/TodoForm";
+import Error from "@/components/Error";
+import Todo from "@/components/Todo";
 
-const pintarError = computed(() => (error.value ? true : false));
+import { useAuth } from "@vueuse/firebase";
+import { useTodos } from "@/composables/useTodos";
+import { onMounted, provide, ref, computed } from "vue";
+export default {
+  components: { Cargando, TodoForm, Error, Todo },
+  setup() {
+    const { isAuthenticated, user } = useAuth();
+    const { getTodos, cargando } = useTodos();
+    const todos = ref([]);
+    const error = ref(null);
+
+    provide("todos", todos);
+    provide("error", error);
+
+    const pintarError = computed(() => (error.value ? true : false));
+
+    onMounted(async () => {
+      todos.value = await getTodos();
+      if (todos.value.res) {
+        error.value = todos.value.error;
+      }
+    });
+
+    return {
+      isAuthenticated,
+      cargando,
+      todos,
+      pintarError,
+    };
+  },
+};
+</script>
 ```
 
 useGetTodos
@@ -569,8 +620,8 @@ useGetTodos
 // Para todos los catch
 catch (error) {
   return {
-      error: true,
-      res: error
+    error: error,
+    res: true
   }
 }
 ```
@@ -609,15 +660,20 @@ Todo.vue
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+export default {
+  props: {
+    todo: Object,
+  },
+  setup() {
+    const error = inject("error");
+    const todos = inject("todos");
 
-const props = defineProps({
-  todo: Object,
-});
+    const eliminar = async (id) => {};
 
-const modificar = (todo) => {};
-
-const eliminar = (id) => {};
+    const modificar = async (todo) => {};
+    return { modificar, eliminar };
+  },
+};
 </script>
 ```
 
@@ -628,85 +684,85 @@ useGetTodos.js
 ```js
 const eliminarTodo = async (id) => {
   try {
-    await reference.doc(id).delete();
+    await refencia.doc(id).delete();
 
-    return { error: false };
+    return { res: false };
   } catch (error) {
     return {
-      error: true,
-      res: error,
+      error: error,
+      res: true,
     };
   }
 };
 ```
 
 Todo.vue
-```html
-<script setup>
-    import { defineProps, inject } from "vue";
-    import { useGetTodosHook } from '../composables/useGetTodosHook'
 
-    const todos = inject('todos')
-    const error = inject('error')
-    const {eliminarTodo} = useGetTodosHook()
-
-    const props = defineProps({
-        todo: Object
-    })
-
-    const modificar = todo => {
-
-    }
+```js
+import { inject } from "vue";
+import { useTodos } from "@/composables/useTodos";
+export default {
+  props: {
+    todo: Object,
+  },
+  setup() {
+    const { eliminarTodo, modificarTodo } = useTodos();
+    const error = inject("error");
+    const todos = inject("todos");
 
     const eliminar = async (id) => {
+      const respuesta = eliminarTodo(id);
 
-        const res = await eliminarTodo(id)
-        console.log(res)
-        
-        if(res.error){
-            error.value = res.res
-            return
-        }
+      if (respuesta.res) {
+        error.value = respuesta.error;
+        return;
+      }
 
-        todos.value = todos.value.filter(item => item.id !== id)
-    }
+      todos.value = todos.value.filter((item) => item.id !== id);
+    };
 
-</script>
+    const modificar = async (todo) => {};
+    return { modificar, eliminar };
+  },
+};
 ```
 
 ## ModificarTodo
+
 useGetTodo.js
+
 ```js
 const modificarTodo = async (todo) => {
-    try {
+  try {
+    await refencia.doc(todo.id).update({
+      estado: !todo.estado,
+    });
 
-        await reference.doc(todo.id).update({
-            estado: !todo.estado,
-        });
-
-        return {error: false}
-        
-    } catch (error) {
-        return {
-            error: true,
-            res: error
-        }
-    }
-}
+    return { res: false };
+  } catch (error) {
+    return {
+      error: error,
+      res: true,
+    };
+  }
+};
 ```
 
 Todo.vue
+
 ```js
 const modificar = async (todo) => {
-    const res = await modificarTodo(todo)
-    if(res.error){
-        error.value = res.res
-        return
-    }
-    todos.value = todos.value.map((item) =>
-      item.id === todo.id ? { ...item, estado: !todo.estado } : item
-    );
-}
+  const respuesta = await modificarTodo(todo);
+
+  if (respuesta.res) {
+    error.value = respuesta.error;
+    return;
+  }
+
+  todos.value = todos.value.map((item) =>
+    item.id === todo.id ? { ...item, estado: !todo.estado } : item
+  );
+};
 ```
 
 ## Reglas Firestore
@@ -721,4 +777,22 @@ service cloud.firestore {
     }
   }
 }
+```
+
+```js
+const getTodos = async () => {
+  try {
+    cargando.value = true;
+    const res = await refencia.where("uid", "==", user.value.uid).get();
+    return res.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  } catch (error) {
+    console.log(error);
+    return {
+      error: error,
+      res: true,
+    };
+  } finally {
+    cargando.value = false;
+  }
+};
 ```
