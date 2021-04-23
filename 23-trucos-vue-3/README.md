@@ -8,6 +8,20 @@ Comparto las extensiones de VSCode de esta sección:
 - [Inteligencia Artificial](https://marketplace.visualstudio.com/items?itemName=TabNine.tabnine-vscode)
 - [Bracket color](https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer-2)
 
+## Vetur can't find jsconfig.json
+
+- Vetur can't find tsconfig.json, jsconfig.json
+- [jsconfig.json](https://vuejs.github.io/vetur/guide/setup.html#project-setup)
+
+jsconfig.json
+```json
+  {
+    "include": [
+      "./src/**/*"
+    ]
+  }
+```
+
 ## script setup
 El `<script setup>` genera automaticamente el return al trabajando con Composition API
 
