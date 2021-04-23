@@ -3,7 +3,7 @@
 Vamos a comenzar a trabajar con Firestore.
 
 :::danger
-Cuidado al utilizar ``<script setup>`` ya que aún está en beta, y no se recomienda para producción. Podría traer problemas al desplegar su aplicación en Firebase. Esperemos que a futuro esté estable.
+Cuidado al utilizar `<script setup>` ya que aún está en beta, y no se recomienda para producción. Podría traer problemas al desplegar su aplicación en Firebase. Esperemos que a futuro esté estable.
 :::
 
 ## VSCode
@@ -17,8 +17,8 @@ Comparto las extensiones de VSCode de esta sección:
 
 ## Repo
 
-- [Repo con script setup](https://github.com/bluuweb/auth-gmail-vue-3/tree/02-firestore)
-- [Repo sin script setup](https://github.com/bluuweb/firestore-auth-setup-tradicional-vue3)
+- [Repo auth](https://github.com/bluuweb/vue-firebase-auth-currentuser/tree/01-auth-google)
+- [Repo auth + firestore](https://github.com/bluuweb/vue-firebase-auth-currentuser/tree/02-firestore)
 
 ## Instalación
 
@@ -35,7 +35,10 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 
+// JS de Bootstrap 5
 import "bootstrap";
+
+// CSS de Bootstrap 5
 import "bootstrap/dist/css/bootstrap.min.css";
 
 createApp(App).use(router).mount("#app");
@@ -43,7 +46,7 @@ createApp(App).use(router).mount("#app");
 
 ## Firebase config
 
-- crear `src/firebase/config.js`
+- crear `src/firebase.js`
 
 ```js
 import firebase from "firebase/app";
@@ -67,6 +70,15 @@ if (!firebase.apps.length) {
 const db = firebase.firestore();
 const auth = firebase.auth();
 const marcaTiempo = firebase.firestore.FieldValue.serverTimestamp;
+
+firebase.getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      unsubscribe();
+      resolve(user);
+    }, reject);
+  });
+};
 
 export { db, auth, firebase, marcaTiempo };
 ```
@@ -233,39 +245,31 @@ export default {
 
 ```js
 import { createRouter, createWebHistory } from "vue-router";
-import { auth } from "../firebase/config";
-
-const requiereAuth = (to, from, next) => {
-  let user = auth.currentUser;
-  if (!user) {
-    next("/");
-  } else {
-    next();
-  }
-};
-
-const sinAutenticacion = (to, from, next) => {
-  let user = auth.currentUser;
-  if (user) {
-    next("/perfil");
-  } else {
-    next();
-  }
-};
+import Home from "../views/Home.vue";
+import { firebase } from "../firebase";
 
 const routes = [
   {
     path: "/",
     name: "Home",
-    component: () => import(/* webpackChunkName: "home" */ "../views/Home.vue"),
-    beforeEnter: sinAutenticacion,
+    component: Home,
   },
   {
     path: "/perfil",
     name: "Perfil",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Perfil.vue"),
-    beforeEnter: requiereAuth,
+      import(/* webpackChunkName: "perfil" */ "../views/Perfil.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/crud",
+    name: "Crud",
+    component: () => import(/* webpackChunkName: "crud" */ "../views/Crud.vue"),
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
 
@@ -274,78 +278,16 @@ const router = createRouter({
   routes,
 });
 
-export default router;
-```
-
-## main.js
-
-Esperamos que se detecte al usuario y luego creamos nuestra aplicación.
-
-```js
-import { createApp } from "vue";
-import App from "./App.vue";
-import router from "./router";
-import store from "./store";
-
-import "bootstrap/dist/css/bootstrap.min.css";
-
-import { auth } from "./firebase/config";
-let app;
-
-// Esperamos que se detecte al usuario y luego creamos nuestra aplicación.
-auth.onAuthStateChanged(() => {
-  if (!app) {
-    app = createApp(App).use(store).use(router).mount("#app");
+router.beforeEach(async (to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  if (requiresAuth && !(await firebase.getCurrentUser())) {
+    next("/");
+  } else {
+    next();
   }
 });
-```
 
-## CRUD
-
-views/Crud.vue
-
-```vue
-<template>
-  <div v-if="isAuthenticated">
-    <h1>Crud</h1>
-  </div>
-</template>
-
-<script>
-import { useAuth } from "@vueuse/firebase";
-
-export default {
-  setup() {
-    return { ...useAuth() };
-  },
-};
-</script>
-```
-
-Router
-
-```js
-{
-  path: '/crud',
-  name: 'Crud',
-  component: () => import(/* webpackChunkName: "about" */ '../views/Crud.vue'),
-  beforeEnter: requiereAuth
-}
-```
-
-Navbar.vue
-
-```html
-<div>
-  <button class="btn btn-sm btn-dark" @click="signIn" v-if="!isAuthenticated">
-    Acceder
-  </button>
-  <div v-else>
-    <button class="btn btn-sm btn-danger m-1" @click="signOut">Salir</button>
-    <router-link class="btn btn-sm btn-dark m-1" to="/crud">CRUD</router-link>
-    <router-link class="btn btn-sm btn-dark" to="/perfil">Perfil</router-link>
-  </div>
-</div>
+export default router;
 ```
 
 ## Cargando.vue
@@ -365,129 +307,259 @@ components/Cargando.vue
 </template>
 ```
 
-## useGetTodos
+## App.vue
+```vue
+<template>
+  <Cargando v-if="loading" />
+  <div v-else>
+    <Navbar />
+    <div class="container">
+      <router-view/>
+    </div>
+  </div>
+</template>
+
+
+<script>
+import Navbar from '@/components/Navbar'
+import Cargando from '@/components/Cargando'
+import {firebase} from '@/firebase'
+import { onMounted, ref } from 'vue'
+
+export default {
+  components: {Navbar, Cargando},
+  setup(){
+
+    const loading = ref(false)
+
+    onMounted(async() => {
+      loading.value = true
+      await firebase.getCurrentUser()
+      loading.value = false
+    })
+
+    return {loading}
+  }
+}
+</script>
+```
+
+## CRUD
+
+views/Crud.vue
+
+```vue
+<template>
+  <div v-if="isAuthenticated">
+    <h1>Crud</h1>
+  </div>
+</template>
+
+<script>
+import { useAuth } from "@vueuse/firebase";
+
+export default {
+  setup() {
+    const { isAuthenticated } = useAuth();
+    return { isAuthenticated };
+  },
+};
+</script>
+```
+
+Router
 
 ```js
-import { useAuth } from "@vueuse/firebase";
-import { db } from "../firebase/config";
-import { ref } from "vue";
+{
+  path: '/crud',
+  name: 'Crud',
+  component: () => import(/* webpackChunkName: "crud" */ '../views/Crud.vue'),
+  meta: {
+    requiresAuth: true
+  },
+}
+```
 
-export const useGetTodosHook = () => {
-  const { user } = useAuth();
-  const cargando = ref(false);
-  const getTodos = async () => {
-    try {
-      cargando.value = true;
-      const res = await db.collection("todos").get();
-      return res.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    } catch (error) {
-      console.log(error);
-      return "Error de conexion";
-    } finally {
-      cargando.value = false;
-    }
-  };
-  return { getTodos, cargando };
-};
+Navbar.vue
+
+```html
+<div>
+  <button class="btn btn-sm btn-dark" @click="signIn" v-if="!isAuthenticated">
+    Acceder
+  </button>
+  <div v-else>
+    <button class="btn btn-sm btn-danger m-1" @click="signOut">Salir</button>
+    <router-link class="btn btn-sm btn-dark m-1" to="/crud">CRUD</router-link>
+    <router-link class="btn btn-sm btn-dark" to="/perfil">Perfil</router-link>
+  </div>
+</div>
+```
+
+## useDb.js
+
+```js
+import {
+    useAuth
+} from "@vueuse/firebase";
+import {
+    db,
+    marcaTiempo
+} from "../firebase";
+import {
+    ref
+} from "vue";
+
+export const useDb = () => {
+
+    const {
+        user
+    } = useAuth();
+
+    const cargando = ref(false);
+    const reference = db.collection("todos");
+
+    const getTodos = async () => {
+        try {
+            cargando.value = true;
+            const res = await reference.where("uid", "==", user.value.uid).get();
+            return res.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+        } catch (error) {
+            return {
+                error: error,
+                res: true
+              }
+        } finally {
+            cargando.value = false;
+        }
+    };
+
+    const agregarTodo = async (texto) => {
+        console.log("texto", texto);
+        try {
+            const todo = {
+                texto: texto,
+                fecha: marcaTiempo(),
+                estado: false,
+                uid: user.value.uid,
+            };
+            const res = await reference.add(todo);
+
+            return {
+                id: res.id,
+                ...todo
+            };
+        } catch (error) {
+            return {
+                error: error,
+                res: true
+              }
+        }
+    };
+
+    const eliminarTodo = async (id) => {
+        try {
+          await reference.doc(id).delete();
+      
+          return { res: false };
+        } catch (error) {
+          return {
+            error: error,
+            res: true,
+          };
+        }
+      };
+
+      const modificarTodo = async (todo) => {
+        try {
+          await reference.doc(todo.id).update({
+            estado: !todo.estado,
+          });
+      
+          return { res: false };
+        } catch (error) {
+          return {
+            error: error,
+            res: true,
+          };
+        }
+      };
+
+    return {
+        getTodos,
+        cargando,
+        agregarTodo,
+        eliminarTodo,
+        modificarTodo
+    };
+
+}
 ```
 
 Crud.vue
 
 ```vue
 <template>
-  <div v-if="isAuthenticated">
-    <h1>Crud</h1>
-    <hr />
-    <div v-if="cargando">
-      <Cargando />
+    <div v-if="isAuthenticated">
+        <h1>CRUD</h1>
+        <Cargando v-if="cargando" />
+        <div v-else>
+            <Error v-if="pintarError" />
+            <TodoForm />
+            <Todo v-for="todo in todos" :key="todo.id" :todo="todo" />
+            
+            <div v-if="todos.length === 0">
+                <p>Sin TODOS</p>
+            </div>
+        </div>
     </div>
-    <div v-else>
-      <pre>{{ todos }}</pre>
-    </div>
-  </div>
 </template>
 
-<script setup>
-import Cargando from "../components/Cargando";
-import { useAuth } from "@vueuse/firebase";
-import { useGetTodosHook } from "../composables/useGetTodosHook";
-import { onMounted, ref } from "vue";
+<script>
+import Cargando from '../components/Cargando'
+import Error from '../components/Error'
+import TodoForm from '../components/TodoForm'
+import Todo from '../components/Todo'
+
+import {useAuth} from '@vueuse/firebase'
+import {useDb} from '../composables/useDb'
+import { computed, onMounted, provide, ref } from 'vue'
 
 export default {
-  components: { Cargando, TodoForm, Error, Todo },
-  setup() {
-    const { isAuthenticated, user } = useAuth();
-    const { getTodos, cargando } = useTodos();
-    const todos = ref([]);
+    components: {Cargando, Error, TodoForm, Todo},
+    setup(){
+        const {isAuthenticated} = useAuth()
+        const {cargando, getTodos} = useDb()
+        const todos = ref([])
+        const error = ref(null)
 
-    provide("todos", todos);
+        provide('todos', todos)
+        provide('error', error)
 
-    onMounted(async () => {
-      todos.value = await getTodos();
-    });
+        const pintarError = computed(() => error.value ? true : false)
 
-    return {
-      isAuthenticated,
-      cargando,
-      todos,
-    };
-  },
-};
+        onMounted(async() => {
+            todos.value = await getTodos()
+            if (todos.value.res) {
+                error.value = todos.value.error;
+            }
+        })
+
+        return {isAuthenticated, cargando, todos, pintarError}
+    }
+}
 </script>
 ```
 
 ## TodoForm.vue
 
-useGetTodos
-
-```js
-import { useAuth } from "@vueuse/firebase";
-import { db, marcaTiempo } from "../firebase/config";
-import { ref } from "vue";
-
-export const useGetTodosHook = () => {
-  const { user } = useAuth();
-  const cargando = ref(false);
-  const reference = db.collection("todos");
-
-  const getTodos = async () => {
-    try {
-      cargando.value = true;
-      const res = await reference.where("uid", "==", user.value.uid).get();
-      return res.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    } catch (error) {
-      console.log(error);
-      return "Error de conexion";
-    } finally {
-      cargando.value = false;
-    }
-  };
-
-  const agregarTodo = async (texto) => {
-    console.log("texto", texto);
-    try {
-      const todo = {
-        texto: texto,
-        fecha: marcaTiempo(),
-        estado: false,
-        uid: user.value.uid,
-      };
-      const res = await reference.add(todo);
-
-      return { id: res.id, ...todo };
-    } catch (error) {
-      console.log(error);
-    } finally {
-    }
-  };
-
-  return { getTodos, cargando, agregarTodo };
-};
-```
-
 TodoForm.vue
 
 ```vue
+oForm.vue
+
 <template>
   <form @submit.prevent="procesarFormulario">
     <input
@@ -499,13 +571,13 @@ TodoForm.vue
   </form>
 </template>
 
-<script setup>
+<script>
 import { inject, ref } from "vue";
-import { useGetTodosHook } from "../composables/useGetTodosHook";
+import { useDb } from "../composables/useDb";
 
 export default {
   setup() {
-    const { agregarTodo } = useTodos();
+    const { agregarTodo } = useDb();
 
     const texto = ref("");
     const todos = inject("todos");
@@ -525,6 +597,7 @@ export default {
     return { texto, procesarFormulario };
   },
 };
+
 </script>
 ```
 
@@ -556,83 +629,7 @@ export default {
 </script>
 ```
 
-Crud.vue
-
-```vue
-<template>
-  <div v-if="isAuthenticated">
-    <h1>Crud Firestore</h1>
-    <hr />
-    <div v-if="cargando">
-      <Cargando />
-    </div>
-    <div v-else>
-      <Error v-if="pintarError" />
-      <TodoForm />
-      <Todo v-for="todo in todos" :key="todo.id" :todo="todo" />
-    </div>
-  </div>
-</template>
-
-<script>
-import Cargando from "@/components/Cargando";
-import TodoForm from "@/components/TodoForm";
-import Error from "@/components/Error";
-import Todo from "@/components/Todo";
-
-import { useAuth } from "@vueuse/firebase";
-import { useTodos } from "@/composables/useTodos";
-import { onMounted, provide, ref, computed } from "vue";
-export default {
-  components: { Cargando, TodoForm, Error, Todo },
-  setup() {
-    const { isAuthenticated, user } = useAuth();
-    const { getTodos, cargando } = useTodos();
-    const todos = ref([]);
-    const error = ref(null);
-
-    provide("todos", todos);
-    provide("error", error);
-
-    const pintarError = computed(() => (error.value ? true : false));
-
-    onMounted(async () => {
-      todos.value = await getTodos();
-      if (todos.value.res) {
-        error.value = todos.value.error;
-      }
-    });
-
-    return {
-      isAuthenticated,
-      cargando,
-      todos,
-      pintarError,
-    };
-  },
-};
-</script>
-```
-
-useGetTodos
-
-```js
-// Para todos los catch
-catch (error) {
-  return {
-    error: error,
-    res: true
-  }
-}
-```
-
 ## Todo.vue
-
-Crud.vue
-
-```html
-<Todo v-for="todo in todos" :key="todo.id" :todo="todo" />
-```
 
 Todo.vue
 
@@ -648,10 +645,15 @@ Todo.vue
           class="btn btn-sm me-2"
           :class="todo.estado ? 'btn-success' : 'btn-warning'"
           @click="modificar(todo)"
+          :disabled="bloquear"
         >
           {{ todo.estado ? "Finalizada" : "Pendiente" }}
         </button>
-        <button class="btn btn-sm btn-danger" @click="eliminar(todo.id)">
+        <button
+          class="btn btn-sm btn-danger"
+          @click="eliminar(todo.id)"
+          :disabled="bloquear"
+        >
           Eliminar
         </button>
       </div>
@@ -659,7 +661,9 @@ Todo.vue
   </div>
 </template>
 
-<script setup>
+<script>
+import { inject, ref } from "vue";
+import { useDb } from "../composables/useDb";
 export default {
   props: {
     todo: Object,
@@ -667,103 +671,45 @@ export default {
   setup() {
     const error = inject("error");
     const todos = inject("todos");
+    const { eliminarTodo, modificarTodo } = useDb();
+    const bloquear = ref(false);
 
-    const eliminar = async (id) => {};
+    const eliminar = async (id) => {
+      bloquear.value = true;
+      const respuesta = await eliminarTodo(id);
 
-    const modificar = async (todo) => {};
-    return { modificar, eliminar };
+      if (respuesta.res) {
+        error.value = respuesta.error;
+        bloquear.value = false;
+        return;
+      }
+
+      todos.value = todos.value.filter((item) => item.id !== id);
+      bloquear.value = false;
+    };
+
+    const modificar = async (todo) => {
+      bloquear.value = true;
+      const respuesta = await modificarTodo(todo);
+
+      if (respuesta.res) {
+        error.value = respuesta.error;
+        bloquear.value = false;
+        return;
+      }
+
+      todos.value = todos.value.map((item) =>
+        item.id === todo.id ? { ...item, estado: !todo.estado } : item
+      );
+      bloquear.value = false;
+    };
+    return { modificar, eliminar, bloquear };
   },
 };
 </script>
 ```
 
-## EliminarTodo
 
-useGetTodos.js
-
-```js
-const eliminarTodo = async (id) => {
-  try {
-    await refencia.doc(id).delete();
-
-    return { res: false };
-  } catch (error) {
-    return {
-      error: error,
-      res: true,
-    };
-  }
-};
-```
-
-Todo.vue
-
-```js
-import { inject } from "vue";
-import { useTodos } from "@/composables/useTodos";
-export default {
-  props: {
-    todo: Object,
-  },
-  setup() {
-    const { eliminarTodo, modificarTodo } = useTodos();
-    const error = inject("error");
-    const todos = inject("todos");
-
-    const eliminar = async (id) => {
-      const respuesta = eliminarTodo(id);
-
-      if (respuesta.res) {
-        error.value = respuesta.error;
-        return;
-      }
-
-      todos.value = todos.value.filter((item) => item.id !== id);
-    };
-
-    const modificar = async (todo) => {};
-    return { modificar, eliminar };
-  },
-};
-```
-
-## ModificarTodo
-
-useGetTodo.js
-
-```js
-const modificarTodo = async (todo) => {
-  try {
-    await refencia.doc(todo.id).update({
-      estado: !todo.estado,
-    });
-
-    return { res: false };
-  } catch (error) {
-    return {
-      error: error,
-      res: true,
-    };
-  }
-};
-```
-
-Todo.vue
-
-```js
-const modificar = async (todo) => {
-  const respuesta = await modificarTodo(todo);
-
-  if (respuesta.res) {
-    error.value = respuesta.error;
-    return;
-  }
-
-  todos.value = todos.value.map((item) =>
-    item.id === todo.id ? { ...item, estado: !todo.estado } : item
-  );
-};
-```
 
 ## Reglas Firestore
 
