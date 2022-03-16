@@ -259,11 +259,12 @@ import router from "../router";
 export const useUserStore = defineStore("user", {
     state: () => ({
         userData: {},
+        loadingUser: false,
         loading: false,
     }),
     actions: {
         async registerUser(email, password) {
-            this.loading = true;
+            this.loadingUser = true;
             try {
                 const { user } = await createUserWithEmailAndPassword(
                     auth,
@@ -276,7 +277,7 @@ export const useUserStore = defineStore("user", {
                 console.log(error);
                 this.userData = {};
             } finally {
-                this.loading = false;
+                this.loadingUser = false;
             }
         },
     },
@@ -287,53 +288,37 @@ Register.vue
 
 ```vue
 <template>
-    <h1>Register</h1>
-    <form @submit.prevent="handleSubmit">
-        <input type="email" placeholder="Ingrese Correo" v-model.trim="email" />
-        <input
-            type="password"
-            placeholder="Ingrese Contraseña"
-            v-model.trim="password"
-        />
-        <button type="submit">Register</button>
-    </form>
+    <div>
+        <h1>Register</h1>
+        <form @submit.prevent="handleSubmit">
+            <input type="email" placeholder="email" v-model.trim="email" />
+            <input
+                type="password"
+                placeholder="password"
+                v-model.trim="password"
+            />
+            <button type="submit" :disabled="userStore.loadingUser">
+                Crear cuenta
+            </button>
+        </form>
+    </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useUserStore } from "../stores/user";
-
 const userStore = useUserStore();
-const email = ref("bluuweb@test.com");
+
+const email = ref("bluuweb1@test.com");
 const password = ref("123123");
 
 const handleSubmit = () => {
-    if (!email.value.trim() || !password.value.trim()) {
-        return console.log("llena los campos");
+    if (!email.value || password.value.length < 6) {
+        alert("ingresa los campos");
     }
+
     userStore.registerUser(email.value, password.value);
 };
-</script>
-```
-
-App.vue
-
-```vue{9}
-<template>
-  <h1>Mi super web</h1>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/login">Login</router-link> |
-    <router-link to="/register">Register</router-link> |
-    <button>Logout</button>
-  </nav>
-  <p v-if="useStore.loading">loading...</p>
-  <router-view></router-view>
-</template>
-
-<script setup>
-import {useUserStore} from './stores/user'
-const useStore = useUserStore()
 </script>
 ```
 
@@ -343,7 +328,7 @@ const useStore = useUserStore()
 
 ```js
 async login(email, password) {
-    this.loading = true;
+    this.loadingUser = true;
     try {
         const { user } = await signInWithEmailAndPassword(
             email,
@@ -355,7 +340,7 @@ async login(email, password) {
         console.log(error);
         this.userData = {};
     } finally {
-        this.loading = false;
+        this.loadingUser = false;
     }
 },
 ```
@@ -364,30 +349,35 @@ Login.vue
 
 ```vue
 <template>
-    <h1>Login</h1>
-    <form @submit.prevent="handleSubmit">
-        <input type="email" placeholder="Ingrese Correo" v-model.trim="email" />
-        <input
-            type="password"
-            placeholder="Ingrese Contraseña"
-            v-model.trim="password"
-        />
-        <button type="submit">Login</button>
-    </form>
+    <div>
+        <h1>Login</h1>
+        <form @submit.prevent="handleSubmit">
+            <input type="email" placeholder="email" v-model.trim="email" />
+            <input
+                type="password"
+                placeholder="password"
+                v-model.trim="password"
+            />
+            <button type="submit" :disabled="userStore.loadingUser">
+                Acceder
+            </button>
+        </form>
+    </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useUserStore } from "../stores/user";
-
 const userStore = useUserStore();
-const email = ref("bluuweb@test.com");
+
+const email = ref("bluuweb1@test.com");
 const password = ref("123123");
 
 const handleSubmit = () => {
-    if (!email.value.trim() || !password.value.trim()) {
-        return console.log("llena los campos");
+    if (!email.value || password.value.length < 6) {
+        alert("ingresa los campos");
     }
+
     userStore.loginUser(email.value, password.value);
 };
 </script>
@@ -397,7 +387,6 @@ const handleSubmit = () => {
 
 ```js
 async signOutUser() {
-    console.log("entró");
     this.loading = true;
     try {
         await signOut(auth);
@@ -424,29 +413,35 @@ App.vue
 -   [unsubscribe to onauthstatechanged](https://stackoverflow.com/questions/42762443/how-can-i-unsubscribe-to-onauthstatechanged)
 -   [api Auth.onAuthStateChanged() v9](https://firebase.google.com/docs/reference/js/auth.auth#authonauthstatechanged)
 
-firebaseConfig.js
+store/user.js (actions)
 
 ```js
-auth.currentUserPromise = () =>
-    new Promise((resolve, reject) => {
-        const unsubscribe = onAuthStateChanged(
+currentUser() {
+    return new Promise((resolve, reject) => {
+        const unsubcribe = onAuthStateChanged(
             auth,
             (user) => {
+                if (user) {
+                    this.userData = {
+                        email: user.email,
+                        uid: user.uid,
+                    };
+                }
                 resolve(user);
             },
             (e) => reject(e)
         );
         // Según la documentación, la función onAuthStateChanged() devuelve
         // La función de cancelación de suscripción para el observador
-        unsubscribe();
+        unsubcribe();
     });
+},
 ```
 
 router.js
 
 ```js
 import { createRouter, createWebHistory } from "vue-router";
-import { auth } from "./firebaseConfig";
 import { useUserStore } from "./stores/user";
 
 import Home from "./views/Home.vue";
@@ -454,15 +449,15 @@ import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
 
 const requireAuth = async (to, from, next) => {
-    const user = await auth.currentUserPromise();
-    console.log("router user", user);
+    const userStore = useUserStore();
+    userStore.loading = true;
+    const user = await userStore.currentUser();
     if (user) {
-        const userStore = useUserStore();
-        userStore.userData = { email: user.email, uid: user.uid };
         next();
     } else {
         next("/login");
     }
+    userStore.loading = false;
 };
 
 const routes = [
@@ -472,11 +467,255 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
     routes,
+    history: createWebHistory(),
 });
 
 export default router;
 ```
 
-## Pronto más videos
+app.vue
+
+```vue
+<template>
+    <div v-if="userStore.loading">loading...</div>
+    <div v-else>
+        <h1>App</h1>
+        <nav>
+            <router-link to="/" v-if="userStore.userData">Home</router-link> |
+            <router-link to="/login" v-if="!userStore.userData"
+                >Login</router-link
+            >
+            |
+            <router-link to="/register" v-if="!userStore.userData"
+                >Register</router-link
+            >
+            |
+            <button @click="userStore.signOutUser" v-if="userStore.userData">
+                Logout
+            </button>
+        </nav>
+        <router-view></router-view>
+    </div>
+</template>
+
+<script setup>
+import { useUserStore } from "./stores/user";
+const userStore = useUserStore();
+</script>
+```
+
+## Verificar cuenta correo
+
+-   [verification email](https://firebase.google.com/docs/auth/web/manage-users?hl=es&authuser=0#send_a_user_a_verification_email)
+
+stores/user.js
+
+```js
+async registerUser(email, password) {
+    this.loadingUser = true;
+    try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        await sendEmailVerification(auth.currentUser);
+        router.push("/login");
+    } catch (error) {
+        console.log(error);
+    } finally {
+        this.loadingUser = false;
+    }
+},
+```
+
+Register.vue
+
+```js
+const handleSubmit = async () => {
+    if (!email.value || password.value.length < 6) {
+        alert("ingresa los campos");
+    }
+
+    try {
+        await userStore.registerUser(email.value, password.value);
+        alert("Verifica email");
+    } catch (error) {
+        console.log(error);
+    }
+};
+```
+
+router.js
+
+```js
+const requireAuth = async (to, from, next) => {
+    const userStore = useUserStore();
+    userStore.loading = true;
+    const user = await userStore.currentUser();
+    console.log(user);
+    if (user && user.emailVerified) {
+        next();
+    } else {
+        next("/login");
+    }
+    userStore.loading = false;
+};
+```
+
+## Firestore
+
+firebaseConfig.js
+
+```js
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore/lite";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBHSBW7EIKq8XvlyfLt3_AQJfoGo4P-w10",
+    authDomain: "vite-udemy.firebaseapp.com",
+    projectId: "vite-udemy",
+    storageBucket: "vite-udemy.appspot.com",
+    messagingSenderId: "472497203702",
+    appId: "1:472497203702:web:022b5d5fc22b4e522c3fd7",
+};
+
+initializeApp(firebaseConfig);
+
+const auth = getAuth();
+const db = getFirestore();
+
+export { auth, db };
+```
+
+```js
+import {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    getDoc,
+    getDocs,
+    query,
+    where,
+} from "firebase/firestore/lite";
+import { defineStore } from "pinia";
+import { auth, db } from "../firebaseConfig";
+import { nanoid } from "nanoid";
+
+// import { useUserStore } from "./user";
+
+export const useDatabaseStore = defineStore("database", {
+    state: () => ({
+        documents: [],
+        q: collection(db, "urls"),
+        loading: false,
+        loadingDoc: false,
+    }),
+    actions: {
+        async getUrls() {
+            this.loading = true;
+            this.documents = [];
+            try {
+                const querySnapshot = await getDocs(
+                    query(this.q, where("user", "==", auth.currentUser.uid))
+                );
+                querySnapshot.forEach((doc) => {
+                    this.documents.push({
+                        id: doc.id,
+                        ...doc.data(),
+                    });
+                });
+            } catch (error) {
+                console.log(error);
+            } finally {
+                this.loading = false;
+            }
+        },
+        async addUrl(name) {
+            // const userStore = useUserStore();
+            this.loadingDoc = true;
+            try {
+                const objeto = {
+                    name: name,
+                    short: nanoid(5),
+                };
+                const docRef = await addDoc(query(this.q), {
+                    ...objeto,
+                    user: auth.currentUser.uid,
+                });
+                this.documents.push({ id: docRef.id, ...objeto });
+            } catch (error) {
+                console.log(error);
+            } finally {
+                this.loadingDoc = false;
+            }
+        },
+        async deleteUrl(id) {
+            this.loadingDoc = true;
+            try {
+                const docRef = doc(db, "urls", id);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.data().user === auth.currentUser.uid) {
+                    await deleteDoc(docRef);
+                    this.documents = this.documents.filter(
+                        (item) => item.id !== id
+                    );
+                } else {
+                    console.log("no eres el autor");
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                this.loadingDoc = false;
+            }
+        },
+    },
+});
+```
+
+```vue
+<template>
+    <div>
+        <h1>Home</h1>
+        <form @submit.prevent="handleSubmit">
+            <input type="text" placeholder="url" v-model.trimp="url" />
+            <button type="submit" :disabled="databaseStore.loadingDoc">
+                Agregar
+            </button>
+        </form>
+        <ul v-if="!databaseStore.loading">
+            <li v-for="item of databaseStore.documents" :key="item.id">
+                {{ item.id }} <br />
+                {{ item.name }} <br />
+                {{ item.short }}
+                <div>
+                    <button
+                        @click="databaseStore.deleteUrl(item.id)"
+                        :disabled="databaseStore.loadingDoc"
+                    >
+                        Eliminar
+                    </button>
+                    <button>Editar</button>
+                </div>
+            </li>
+        </ul>
+        <div v-else>loading...</div>
+    </div>
+</template>
+
+<script setup>
+import { onBeforeMount, ref } from "vue";
+import { useDatabaseStore } from "../stores/database";
+
+const databaseStore = useDatabaseStore();
+
+const url = ref("");
+const handleSubmit = async () => {
+    await databaseStore.addUrl(url.value);
+    console.log("agregado");
+};
+
+onBeforeMount(async () => {
+    await databaseStore.getUrls();
+});
+</script>
+```

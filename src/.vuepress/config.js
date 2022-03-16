@@ -41,6 +41,7 @@ module.exports = {
             "/07-crud-firebase/",
             "/08-auth-firebase/",
             "/09-auth-firestore/",
+            "/26-pinia/",
         ],
     },
     plugins: ["@vuepress/plugin-back-to-top", "@vuepress/plugin-medium-zoom"],
