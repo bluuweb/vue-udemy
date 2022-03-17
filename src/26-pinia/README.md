@@ -562,6 +562,8 @@ const requireAuth = async (to, from, next) => {
 
 ## Firestore
 
+-   [Inicializa Cloud Firestore](https://firebase.google.com/docs/firestore/quickstart?hl=es#initialize)
+
 firebaseConfig.js
 
 ```js
@@ -586,38 +588,53 @@ const db = getFirestore();
 export { auth, db };
 ```
 
+## Agregar datos manualmente
+
 ```js
-import {
-    addDoc,
-    collection,
-    deleteDoc,
-    doc,
-    getDoc,
-    getDocs,
-    query,
-    where,
-} from "firebase/firestore/lite";
+urls: [
+    id1: {
+        name: 'https://bluuweb.org',
+        short: 'aDgdGd',
+        user: 'pQycjKGmIKQ2wL4P1jvkAPhH4gh2'
+    },
+    id2: {
+        name: 'https://firebase.com',
+        short: 'aDgdGd',
+        user: 'pQycjKGmIKQ2wL4P1jvkAPhH4gh2'
+    }
+]
+```
+
+## Leer doc
+
+-   [Obtén varios documentos de una colección](https://firebase.google.com/docs/firestore/query-data/get-data?hl=es#get_multiple_documents_from_a_collection)
+
+database.js
+
+```js
+import { collection, getDocs, query, where } from "firebase/firestore/lite";
 import { defineStore } from "pinia";
 import { auth, db } from "../firebaseConfig";
-import { nanoid } from "nanoid";
-
-// import { useUserStore } from "./user";
 
 export const useDatabaseStore = defineStore("database", {
     state: () => ({
         documents: [],
-        q: collection(db, "urls"),
         loading: false,
         loadingDoc: false,
     }),
     actions: {
         async getUrls() {
+            if (this.documents.length !== 0) {
+                return;
+            }
             this.loading = true;
             this.documents = [];
+            const q = query(
+                collection(db, "urls"),
+                where("user", "==", auth.currentUser.uid)
+            );
             try {
-                const querySnapshot = await getDocs(
-                    query(this.q, where("user", "==", auth.currentUser.uid))
-                );
+                const querySnapshot = await getDocs(q);
                 querySnapshot.forEach((doc) => {
                     this.documents.push({
                         id: doc.id,
@@ -630,52 +647,121 @@ export const useDatabaseStore = defineStore("database", {
                 this.loading = false;
             }
         },
-        async addUrl(name) {
-            // const userStore = useUserStore();
-            this.loadingDoc = true;
-            try {
-                const objeto = {
-                    name: name,
-                    short: nanoid(5),
-                };
-                const docRef = await addDoc(query(this.q), {
-                    ...objeto,
-                    user: auth.currentUser.uid,
-                });
-                this.documents.push({ id: docRef.id, ...objeto });
-            } catch (error) {
-                console.log(error);
-            } finally {
-                this.loadingDoc = false;
-            }
-        },
-        async deleteUrl(id) {
-            this.loadingDoc = true;
-            try {
-                const docRef = doc(db, "urls", id);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.data().user === auth.currentUser.uid) {
-                    await deleteDoc(docRef);
-                    this.documents = this.documents.filter(
-                        (item) => item.id !== id
-                    );
-                } else {
-                    console.log("no eres el autor");
-                }
-            } catch (error) {
-                console.log(error);
-            } finally {
-                this.loadingDoc = false;
-            }
-        },
     },
 });
+```
+
+## Reset store
+
+-   [resetting the state](https://pinia.vuejs.org/core-concepts/state.html#resetting-the-state)
+-   [accessing other stores actions](https://pinia.vuejs.org/core-concepts/actions.html#accessing-other-stores-actions)
+
+useUserStore
+
+```js
+import { useDatabaseStore } from "./database";
+```
+
+```js{3, 12,19,27}
+async signOutUser() {
+    this.loadingUser = true;
+    const databaseStore = useDatabaseStore();
+    try {
+        await signOut(auth);
+        router.push("/login");
+    } catch (error) {
+        console.log(error);
+    } finally {
+        this.loadingUser = false;
+        this.userData = null;
+        databaseStore.$reset();
+    }
+},
+currentUser() {
+    return new Promise((resolve, reject) => {
+        const unsubcribe = onAuthStateChanged(
+            auth,
+            (user) => {
+                const databaseStore = useDatabaseStore();
+                if (user) {
+                    this.userData = {
+                        email: user.email,
+                        uid: user.uid,
+                    };
+                } else {
+                    this.userData = null;
+                    databaseStore.$reset();
+                }
+                resolve(user);
+            },
+            (e) => reject(e)
+        );
+        unsubcribe();
+    });
+},
+```
+
+## Agregar doc
+
+-   [Agrega un documento](https://firebase.google.com/docs/firestore/manage-data/add-data?hl=es#add_a_document)
+
+```js
+async addUrl(name) {
+    this.loadingDoc = true;
+    try {
+        const docObjeto = {
+            name: name,
+            short: nanoid(5),
+            user: auth.currentUser.uid
+        };
+        const q = query(collection(db, 'urls'))
+        const docRef = await addDoc(q, docObjeto);
+        this.documents.push({ id: docRef.id, ...docObjeto });
+    } catch (error) {
+        console.log(error);
+    } finally {
+        this.loadingDoc = false;
+    }
+},
+```
+
+## Borrar doc
+
+-   [Borra documentos](https://firebase.google.com/docs/firestore/manage-data/delete-data?hl=es#delete_documents)
+-   [Obtén un documento](https://firebase.google.com/docs/firestore/query-data/get-data?hl=es#get_a_document)
+
+```js
+async deleteUrl(id) {
+    this.loadingDoc = true;
+    try {
+        const docRef = doc(db, "urls", id);
+        const docSnap = await getDoc(docRef);
+
+        if(!docSnap.exists()){
+            throw new Error('no existe el doc')
+        }
+
+        if (docSnap.data().user === auth.currentUser.uid) {
+            await deleteDoc(docRef);
+            this.documents = this.documents.filter(
+                (item) => item.id !== id
+            );
+        } else {
+            throw new Error('no eres el autor')
+        }
+    } catch (error) {
+        console.log(error.message);
+    } finally {
+        this.loadingDoc = false;
+    }
+},
 ```
 
 ```vue
 <template>
     <div>
         <h1>Home</h1>
+        <p>Bienvenido: {{ userStore.userData.uid }}</p>
         <form @submit.prevent="handleSubmit">
             <input type="text" placeholder="url" v-model.trimp="url" />
             <button type="submit" :disabled="databaseStore.loadingDoc">
@@ -694,7 +780,9 @@ export const useDatabaseStore = defineStore("database", {
                     >
                         Eliminar
                     </button>
-                    <button>Editar</button>
+                    <button @click="router.push(`/editar/${item.id}`)">
+                        Editar
+                    </button>
                 </div>
             </li>
         </ul>
@@ -704,9 +792,13 @@ export const useDatabaseStore = defineStore("database", {
 
 <script setup>
 import { onBeforeMount, ref } from "vue";
+import { useRouter } from "vue-router";
 import { useDatabaseStore } from "../stores/database";
+import { useUserStore } from "../stores/user";
 
 const databaseStore = useDatabaseStore();
+const userStore = useUserStore();
+const router = useRouter();
 
 const url = ref("");
 const handleSubmit = async () => {
@@ -719,3 +811,140 @@ onBeforeMount(async () => {
 });
 </script>
 ```
+
+## Leer único doc
+
+```js
+async leerUrl(id) {
+    this.loadingDoc = true;
+    try {
+        const docRef = doc(db, "urls", id);
+        const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists()) {
+            throw new Error("no existe el doc");
+        }
+
+        if (docSnap.data().user === auth.currentUser.uid) {
+            return docSnap.data().name;
+        } else {
+            throw new Error("no eres el autor");
+        }
+    } catch (error) {
+        console.log(error.message);
+    } finally {
+        this.loadingDoc = false;
+    }
+},
+```
+
+router.js
+
+```js
+const routes = [
+    { path: "/", component: Home, beforeEnter: requireAuth },
+    { path: "/editar/:id", component: Editar, beforeEnter: requireAuth },
+    { path: "/login", component: Login },
+    { path: "/register", component: Register },
+];
+```
+
+```vue
+<template>
+    <div>
+        <h1>Editar</h1>
+        <p v-if="databaseStore.loadingDoc">Loading doc...</p>
+        <form @submit.prevent="handleSubmit" v-else>
+            <input type="text" placeholder="url" v-model.trimp="url" />
+            <button type="submit" :disabled="databaseStore.loadingDoc">
+                Editar
+            </button>
+        </form>
+    </div>
+</template>
+
+<script setup>
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import { useDatabaseStore } from "../stores/database";
+
+const route = useRoute();
+const databaseStore = useDatabaseStore();
+const url = ref("");
+
+onMounted(async () => {
+    url.value = await databaseStore.leerUrl(route.params.id);
+});
+
+const handleSubmit = async () => {
+    await databaseStore.updateUrl(route.params.id, url.value);
+};
+</script>
+```
+
+## Update doc
+
+-   [Actualiza un documento](https://firebase.google.com/docs/firestore/manage-data/add-data?hl=es#update-data)
+
+```js
+async updateUrl(id, name) {
+    this.loadingDoc = true;
+    try {
+        const docRef = doc(db, "urls", id);
+        const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists()) {
+            throw new Error("no existe el doc");
+        }
+
+        if (docSnap.data().user === auth.currentUser.uid) {
+            await updateDoc(docRef, {
+                name: name,
+            });
+            this.documents = this.documents.map((item) =>
+                item.id === id ? { ...item, name: name } : item
+            );
+        } else {
+            throw new Error("no eres el autor");
+        }
+    } catch (error) {
+        console.log(error.message);
+    } finally {
+        this.loadingDoc = false;
+    }
+},
+```
+
+## Rules
+
+-   [Reglas de seguridad versión 2](https://firebase.google.com/docs/firestore/security/get-started?hl=es)
+-   [Reglas básicas de lectura y escritura](https://firebase.google.com/docs/firestore/security/rules-structure?hl=es#basic_readwrite_rules)
+-   [Autenticación](https://firebase.google.com/docs/firestore/security/rules-conditions?hl=es#authentication)
+
+```js
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /urls/{id} {
+      allow read, update, delete: if request.auth != null && request.auth.uid == resource.data.user;
+      allow create: if request.auth != null;
+    }
+  }
+}
+```
+
+## Deploy
+
+```
+npm install -g firebase-tools
+firebase login
+firebase init
+firebase deploy
+```
+
+:::tip ¿ejecución de scripts está deshabilitada en este sistema?
+Ejecutar windows + R –> gpedit.msc.
+Ir a Plantillas administrativas> Componentes de Windows> Windows PowerShell>
+Seleccionar Activar la ejecución de scripts, click derecho, editar.
+Seleccionar Habilitada y Permitir todos los scripts, Aplicar.
+:::
