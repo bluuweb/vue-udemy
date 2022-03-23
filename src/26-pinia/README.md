@@ -948,3 +948,292 @@ Ir a Plantillas administrativas> Componentes de Windows> Windows PowerShell>
 Seleccionar Activar la ejecución de scripts, click derecho, editar.
 Seleccionar Habilitada y Permitir todos los scripts, Aplicar.
 :::
+
+## Ant Design Vue
+
+-   [andv next](https://next.antdv.com/docs/vue/introduce)
+
+```sh
+npm install ant-design-vue@next --save
+```
+
+-   [unplugin components](https://github.com/antfu/unplugin-vue-components)
+
+```sh
+npm i unplugin-vue-components
+```
+
+vite.config.js
+
+```js
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+
+import Components from "unplugin-vue-components/vite";
+import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
+
+// https://vitejs.dev/config/
+export default defineConfig({
+    plugins: [
+        vue(),
+        Components({
+            resolvers: [AntDesignVueResolver()],
+        }),
+    ],
+});
+```
+
+```vue
+<a-button type="primary" size="large">Boton</a-button>
+```
+
+## Layout
+
+-   [layout](https://next.antdv.com/components/layout)
+-   [current-route](https://stackoverflow.com/questions/63800831/how-to-access-current-route-name-reactively-in-vue-composition-api-in-typescript)
+-   [v-model emit event](https://www.cursosdesarrolloweb.es/blog/v-model-en-vue-3/)
+
+Login.vue
+
+```vue
+<template>
+    <a-layout>
+        <a-layout-header v-if="!userStore.loadingSession">
+            <a-menu
+                mode="horizontal"
+                theme="dark"
+                :style="{ lineHeight: '64px' }"
+                v-model:selectedKeys="selectedKeys"
+            >
+                <a-menu-item v-if="userStore.userData" key="home">
+                    <router-link to="/">Home</router-link>
+                </a-menu-item>
+                <a-menu-item v-if="!userStore.userData" key="login">
+                    <router-link to="/login">Login</router-link>
+                </a-menu-item>
+                <a-menu-item v-if="!userStore.userData" key="register">
+                    <router-link to="/register">Register</router-link>
+                </a-menu-item>
+                <a-menu-item
+                    @click="userStore.logoutUser"
+                    v-if="userStore.userData"
+                    key="logout"
+                >
+                    Logout
+                </a-menu-item>
+            </a-menu>
+        </a-layout-header>
+        <a-layout-content style="padding: 0 50px">
+            <div
+                :style="{
+                    background: '#fff',
+                    padding: '24px',
+                    minHeight: '280px',
+                }"
+            >
+                <div v-if="userStore.loadingSession">loading user...</div>
+                <router-view></router-view>
+            </div>
+        </a-layout-content>
+    </a-layout>
+</template>
+
+<script setup>
+import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
+import { useUserStore } from "./stores/user";
+
+const userStore = useUserStore();
+const route = useRoute();
+const selectedKeys = ref([]);
+
+watch(
+    () => route.name,
+    () => {
+        // console.log(route.name)
+        selectedKeys.value = [route.name];
+    }
+);
+</script>
+```
+
+## Grid
+
+-   [grid](https://next.antdv.com/components/grid)
+-   [form](https://next.antdv.com/components/form)
+
+```vue
+<template>
+    <a-row>
+        <a-col
+            :xs="{ span: 24 }"
+            :sm="{ span: 18, offset: 3 }"
+            :lg="{ span: 12, offset: 6 }"
+        >
+            <a-form
+                :model="formState"
+                @finish="onFinish"
+                @finishFailed="onFinishFailed"
+                name="basic"
+                layout="vertical"
+                autocomplete="off"
+            >
+                <a-form-item
+                    label="Email"
+                    name="email"
+                    :rules="[
+                        {
+                            required: true,
+                            type: 'email',
+                            message: 'Por favor escriba un email válido',
+                        },
+                    ]"
+                >
+                    <a-input v-model:value="formState.email"></a-input>
+                </a-form-item>
+                <a-form-item
+                    label="Password"
+                    name="password"
+                    :rules="[
+                        {
+                            required: true,
+                            min: 6,
+                            message:
+                                'Por favor escriba una contraseña de 6 carácteres',
+                        },
+                    ]"
+                >
+                    <a-input-password
+                        v-model:value="formState.password"
+                    ></a-input-password>
+                </a-form-item>
+                <a-form-item>
+                    <a-button type="primary" html-type="submit"
+                        >Acceder</a-button
+                    >
+                </a-form-item>
+            </a-form>
+        </a-col>
+    </a-row>
+</template>
+
+<script setup>
+import { reactive } from "vue";
+import { useUserStore } from "../stores/user";
+
+const userStore = useUserStore();
+
+const formState = reactive({
+    password: "",
+    email: "bluuweb1@test.com",
+});
+
+const onFinish = async (values) => {
+    console.log("Success:", values);
+    await userStore.loginUser(formState.email, formState.password);
+};
+
+const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+};
+</script>
+```
+
+Register.vue
+
+```vue
+<template>
+    <a-row>
+        <a-col
+            :xs="{ span: 24 }"
+            :sm="{ span: 18, offset: 3 }"
+            :lg="{ span: 12, offset: 6 }"
+        >
+            <a-form
+                :model="formState"
+                @finishFailed="onFinishFailed"
+                @finish="onFinish"
+                name="basicTwo"
+                layout="vertical"
+                autocomplete="off"
+            >
+                <a-form-item
+                    label="Email"
+                    name="email"
+                    :rules="[
+                        {
+                            required: true,
+                            type: 'email',
+                            message: 'Por favor escriba un email válido',
+                        },
+                    ]"
+                >
+                    <a-input v-model:value="formState.email"></a-input>
+                </a-form-item>
+                <a-form-item
+                    label="Password"
+                    name="password"
+                    :rules="[
+                        {
+                            required: true,
+                            min: 6,
+                            message:
+                                'Por favor escriba una contraseña de 6 carácteres',
+                        },
+                    ]"
+                >
+                    <a-input-password
+                        v-model:value="formState.password"
+                    ></a-input-password>
+                </a-form-item>
+                <a-form-item
+                    label="Repita Password"
+                    name="repassword"
+                    :rules="{ validator: validateRePass }"
+                >
+                    <a-input-password
+                        v-model:value="formState.repassword"
+                    ></a-input-password>
+                </a-form-item>
+                <a-form-item>
+                    <a-button type="primary" html-type="submit"
+                        >Acceder</a-button
+                    >
+                </a-form-item>
+            </a-form>
+        </a-col>
+    </a-row>
+</template>
+
+<script setup>
+import { reactive } from "vue";
+import { useUserStore } from "../stores/user";
+
+const userStore = useUserStore();
+
+const formState = reactive({
+    password: "",
+    repassword: "",
+    email: "bluuweb1@test.com",
+});
+
+const validateRePass = async (_rule, value) => {
+    if (value === "") {
+        return Promise.reject("Por favor repita contraseña");
+    }
+    if (value !== formState.password) {
+        return Promise.reject("No coinciden las contraseñas");
+    }
+    Promise.resolve();
+};
+
+const onFinish = async (values) => {
+    console.log("Success:", values);
+    await userStore.registerUser(values.email, values.password);
+};
+
+const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+};
+</script>
+```
