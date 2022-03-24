@@ -1556,3 +1556,16 @@ onMounted(async () => {
 });
 </script>
 ```
+
+App.vue
+
+```css
+.container {
+    background-color: rgb(255, 255, 255);
+    padding: 24px;
+    min-height: calc(100vh - 64px);
+}
+.text-center {
+    text-align: center;
+}
+```
