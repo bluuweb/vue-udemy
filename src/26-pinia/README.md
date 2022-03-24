@@ -1237,3 +1237,322 @@ const onFinishFailed = (errorInfo) => {
 };
 </script>
 ```
+
+## Errores Fire Auth
+
+-   [lista códigos](https://firebase.google.com/docs/reference/js/auth#autherrorcodes)
+
+```js
+async loginUser(email, password) {
+    this.loadingUser = true;
+    try {
+        const { user } = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+        this.userData = { email: user.email, uid: user.uid };
+        router.push("/");
+    } catch (error) {
+        // console.log(error.code);
+        return error.code;
+    } finally {
+        this.loadingUser = false;
+    }
+},
+```
+
+Login.vue
+
+```vue
+<script setup>
+import { reactive } from "vue";
+import { useUserStore } from "../stores/user";
+import { message } from "ant-design-vue";
+import "ant-design-vue/es/message/style/css";
+
+const userStore = useUserStore();
+
+const formState = reactive({
+    password: "",
+    email: "bluuweb1@test.com",
+});
+
+const onFinish = async (values) => {
+    console.log("Success:", values);
+    const res = await userStore.loginUser(formState.email, formState.password);
+    if (res === "auth/wrong-password") {
+        message.error("credenciales no válidas");
+    }
+};
+
+const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+};
+</script>
+```
+
+```js
+async registerUser(email, password) {
+    this.loadingUser = true;
+    try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        await sendEmailVerification(auth.currentUser);
+        router.push("/login");
+    } catch (error) {
+        // console.log(error);
+        return error.code;
+    } finally {
+        this.loadingUser = false;
+    }
+},
+```
+
+Register.vue
+
+```js
+const onFinish = async (values) => {
+    console.log("Success:", values);
+    const res = await userStore.registerUser(values.email, values.password);
+    if (!res) {
+        return message.success("Revisa tu correo electrónico para continuar");
+    }
+    switch (res) {
+        case "auth/email-already-in-use":
+            message.error("Correo ya registrado");
+            break;
+    }
+};
+```
+
+## AddForm.vue
+
+components/AddForm.vue
+
+```vue
+<template>
+    <a-form
+        :model="formState"
+        @finish="onFinish"
+        name="basicAdd"
+        layout="vertical"
+        autocomplete="off"
+    >
+        <a-form-item
+            label="Ingrese URL"
+            name="url"
+            :rules="[
+                {
+                    required: true,
+                    whitespace: true,
+                    pattern: regExpUrl,
+                    message: 'Ingresa una URL válida',
+                },
+            ]"
+        >
+            <a-input v-model:value="formState.url"></a-input>
+        </a-form-item>
+        <a-form-item>
+            <a-button
+                type="primary"
+                html-type="submit"
+                :loading="databaseStore.loadingURL"
+            >
+                Agregar
+            </a-button>
+        </a-form-item>
+    </a-form>
+</template>
+
+<script setup>
+import { reactive } from "vue";
+import { regExpUrl } from "../utils/regExpUrl";
+import { useDatabaseStore } from "../stores/database";
+import { message } from "ant-design-vue";
+
+const databaseStore = useDatabaseStore();
+const formState = reactive({
+    url: "",
+});
+
+const onFinish = async (values) => {
+    // console.log("success");
+    const res = await databaseStore.addUrl(formState.url);
+    formState.url = "";
+    if (!res) {
+        message.success("URL agregada con éxito");
+    }
+};
+</script>
+```
+
+database.js
+
+```js
+async addUrl(name) {
+    this.loadingURL = true;
+    try {
+        const objetoDoc = {
+            name: name,
+            short: nanoid(6),
+            user: auth.currentUser.uid,
+        };
+        const docRef = await addDoc(collection(db, "urls"), objetoDoc);
+        this.documents.push({
+            ...objetoDoc,
+            id: docRef.id,
+        });
+    } catch (error) {
+        console.log(error.code);
+    } finally {
+        this.loadingURL = false;
+    }
+},
+```
+
+utils/regExpUrl.js
+
+```js
+const regExpUrl =
+    /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
+
+export { regExpUrl };
+```
+
+## Card
+
+```vue
+<template>
+    <div>
+        <h1>Home</h1>
+
+        <add-form></add-form>
+
+        <a-spin v-if="databaseStore.loadingDoc" />
+
+        <a-space direction="vertical" style="width: 100%">
+            <a-card
+                v-for="item of databaseStore.documents"
+                :key="item.id"
+                :title="item.short"
+            >
+                <template #extra>
+                    <a-space>
+                        <a-button @click="router.push(`/editar/${item.id}`)"
+                            >Editar</a-button
+                        >
+                        <a-popconfirm
+                            title="¿Estás seguro?"
+                            ok-text="Yes"
+                            cancel-text="No"
+                            @confirm="confirm(item.id)"
+                            @cancel="cancel"
+                        >
+                            <a-button danger>Eliminar</a-button>
+                        </a-popconfirm>
+                    </a-space>
+                </template>
+                <p>{{ item.name }}</p>
+            </a-card>
+        </a-space>
+    </div>
+</template>
+
+<script setup>
+import { useDatabaseStore } from "../stores/database";
+import { useRouter } from "vue-router";
+import { message } from "ant-design-vue";
+
+const databaseStore = useDatabaseStore();
+const router = useRouter();
+
+const confirm = (id) => {
+    console.log(id);
+    databaseStore.deleteUrl(id);
+    message.success("Eliminado");
+};
+
+const cancel = (e) => {
+    console.log(e);
+    message.error("No se eliminó");
+};
+
+databaseStore.getUrls();
+</script>
+```
+
+## View Editar
+
+```vue
+<template>
+    <div>
+        <h1>Editar id: route.params</h1>
+        <a-form
+            :model="formState"
+            @finish="onFinish"
+            name="basicAdd"
+            layout="vertical"
+            autocomplete="off"
+        >
+            <a-form-item
+                label="Ingrese URL"
+                name="url"
+                :rules="[
+                    {
+                        required: true,
+                        whitespace: true,
+                        pattern: regExpUrl,
+                        message: 'Ingresa una URL válida',
+                    },
+                ]"
+            >
+                <a-input v-model:value="formState.url"></a-input>
+            </a-form-item>
+            <a-form-item>
+                <a-space>
+                    <a-button
+                        type="primary"
+                        html-type="submit"
+                        :loading="databaseStore.loadingURL"
+                    >
+                        Editar
+                    </a-button>
+                    <a-button danger @click="router.push('/')">
+                        Volver
+                    </a-button>
+                </a-space>
+            </a-form-item>
+        </a-form>
+    </div>
+</template>
+
+<script setup>
+import { onMounted, reactive } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useDatabaseStore } from "../stores/database";
+import { regExpUrl } from "../utils/regExpUrl";
+import { message } from "ant-design-vue";
+
+const databaseStore = useDatabaseStore();
+
+const formState = reactive({
+    url: "",
+});
+
+const route = useRoute();
+const router = useRouter();
+
+const onFinish = async () => {
+    const res = await databaseStore.updateUrl(route.params.id, formState.url);
+    formState.url = "";
+    if (!res) {
+        return message.success("URL modificada con éxito");
+    }
+    message.error(res);
+};
+
+onMounted(async () => {
+    formState.url = await databaseStore.leerUrl(route.params.id);
+});
+</script>
+```
