@@ -1569,3 +1569,293 @@ App.vue
     text-align: center;
 }
 ```
+
+## Perfil User
+
+-   [Actualiza el perfil de un usuario](https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile)
+-   [upload-files](https://firebase.google.com/docs/storage/web/upload-files)
+
+Crear collection users
+
+:::warning Importante
+
+No olvidar el await en currentUser
+
+```js
+await this.getUser(user);
+```
+
+Ya que así todas las vistas protegidas esperarán la información del usuario, antes de ser pintada.
+:::
+
+```js
+async getUser(user) {
+    try {
+        const objetoUser = {
+            uid: user.uid,
+            email: user.email,
+            photoURL: user.photoURL,
+            displayName: user.displayName,
+        };
+        const docRef = doc(db, "users", user.uid);
+        const docSpan = await getDoc(docRef);
+        if (docSpan.exists()) {
+            console.log("existe");
+            this.userData = { ...docSpan.data(), uid: docSpan.id };
+        } else {
+            console.log("no existe");
+            await setDoc(docRef, objetoUser);
+            this.userData = objetoUser;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+},
+async loginUser(email, password) {
+    this.loadingUser = true;
+    try {
+        const { user } = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+        this.getUser(user);
+
+        router.push("/");
+    } catch (error) {
+        // console.log(error.code);
+        return error.code;
+    } finally {
+        this.loadingUser = false;
+    }
+},
+currentUser() {
+    return new Promise((resolve, reject) => {
+        const unsuscribe = onAuthStateChanged(
+            auth,
+            async (user) => {
+                if (user) {
+                    await this.getUser(user);
+                } else {
+                    this.userData = null;
+                    const databaseStore = useDatabaseStore();
+                    databaseStore.$reset();
+                }
+                resolve(user);
+            },
+            (e) => reject(e)
+        );
+        unsuscribe();
+    });
+},
+```
+
+Reglas de seguridad
+
+```js
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /urls/{id} {
+      allow read, update, delete: if request.auth != null && request.auth.uid == resource.data.user;
+      allow create: if request.auth != null;
+    }
+    match /users/{id} {
+      allow read, update, delete: if request.auth != null && request.auth.uid == id;
+      allow create: if request.auth != null;
+    }
+  }
+}
+```
+
+routes.js
+
+```js
+{
+    name: "perfil",
+    path: "/perfil",
+    component: Perfil,
+    beforeEnter: requireAuth,
+},
+```
+
+App.vue
+
+```html
+<a-menu-item v-if="userStore.userData" key="perfil">
+    <router-link to="/perfil">Perfil</router-link>
+</a-menu-item>
+```
+
+```vue
+<template>
+    <h1 class="text-center">Administra aquí tu perfil</h1>
+    <a-row>
+        <a-col
+            :xs="{ span: 24 }"
+            :sm="{ span: 18, offset: 3 }"
+            :lg="{ span: 12, offset: 6 }"
+        >
+            <a-form
+                :model="userStore.userData"
+                @finish="onFinish"
+                name="basicPerfilForm"
+                layout="vertical"
+                autocomplete="off"
+            >
+                <a-form-item
+                    label="Email (no editable)"
+                    name="email"
+                    :rules="[
+                        {
+                            required: true,
+                            whitespace: true,
+                            message: 'Por favor escriba un nombre válido',
+                        },
+                    ]"
+                >
+                    <a-input
+                        disabled
+                        v-model:value="userStore.userData.email"
+                    ></a-input>
+                </a-form-item>
+                <a-form-item
+                    label="Nombre de usuario"
+                    name="displayName"
+                    :rules="[
+                        {
+                            required: true,
+                            whitespace: true,
+                            message: 'Por favor escriba un nombre válido',
+                        },
+                    ]"
+                >
+                    <a-input
+                        v-model:value="userStore.userData.displayName"
+                    ></a-input>
+                </a-form-item>
+
+                <a-upload
+                    v-model:file-list="fileList"
+                    list-type="picture"
+                    :max-count="1"
+                    :before-upload="beforeUpload"
+                    @change="handleChange"
+                >
+                    <a-button> Subir foto de perfil </a-button>
+                </a-upload>
+
+                <a-form-item>
+                    <a-button
+                        type="primary"
+                        html-type="submit"
+                        :loading="userStore.loadingUser"
+                    >
+                        Actualizar
+                    </a-button>
+                </a-form-item>
+            </a-form>
+        </a-col>
+    </a-row>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import { message } from "ant-design-vue";
+import { useUserStore } from "../stores/user";
+
+const userStore = useUserStore();
+
+const fileList = ref([]);
+
+const handleRemove = (file) => {
+    const index = fileList.value.indexOf(file);
+    const newFileList = fileList.value.slice();
+    newFileList.splice(index, 1);
+    fileList.value = newFileList;
+};
+
+const handleChange = (info) => {
+    // validación de jpg y png
+    if (info.file.status !== "uploading") {
+        const isJpgOrPng =
+            info.file.type === "image/jpeg" || info.file.type === "image/png";
+
+        if (!isJpgOrPng) {
+            message.error("Solo .jpg o .png");
+            handleRemove(info.file);
+            return;
+        }
+
+        const isLt2M = info.file.size / 1024 / 1024 < 2;
+
+        if (!isLt2M) {
+            message.error("Máximo 2MB!");
+            handleRemove(info.file);
+            return false;
+        }
+    }
+
+    // solo permitir una imagen
+    let resFileList = [...info.fileList];
+    resFileList = resFileList.slice(-1);
+    resFileList = resFileList.map((file) => {
+        if (file.response) {
+            file.url = file.response.url;
+        }
+
+        return file;
+    });
+    console.log(resFileList);
+    fileList.value = resFileList;
+};
+
+const beforeUpload = (file) => {
+    return false;
+};
+
+const onFinish = async (value) => {
+    fileList.value.forEach((file) => {
+        userStore.updateUser(file);
+    });
+};
+</script>
+```
+
+firebaseConfig.js
+
+```js
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const db = getFirestore();
+const storage = getStorage(app);
+
+export { auth, db, storage };
+```
+
+userStore
+
+```js
+async updateUser(file) {
+    console.log(file.type);
+    console.log(file.name);
+    console.log(file.size);
+    console.log(file);
+    try {
+        const storageRef = ref(storage, `${this.userData.uid}/perfil`);
+        const spanshot = await uploadBytes(
+            storageRef,
+            file.originFileObj
+        );
+        const refURL = await getDownloadURL(spanshot.ref);
+        console.log(refURL);
+    } catch (error) {
+        console.log(error);
+    }
+},
+```
+
+:::warning Reglas de seguridad
+Pasar las reglas a true
+:::
