@@ -2,6 +2,13 @@
 
 En esta sección conoceremos como trabajar con Vite, Pinia y Firebase 9, en nuevo estándar 2022 para Vue.js 🙌
 
+## Códigos
+
+-   [codigos finales](https://github.com/bluuweb/vue-3-firebase-9-pinia-router-4-auth-firestore)
+-   [firestore](https://github.com/bluuweb/vue-3-firebase-9-pinia-router-4-auth-firestore/tree/02-firestore)
+-   [antdv](https://github.com/bluuweb/vue-3-firebase-9-pinia-router-4-auth-firestore/tree/03-ui)
+-   [storage](https://github.com/bluuweb/vue-3-firebase-9-pinia-router-4-auth-firestore/tree/04-files)
+
 ## Vite
 
 -   [Vite web oficial](https://vitejs.dev/): Vite se define como una herramienta de frontend que te ayudará a crear tus proyectos de forma agnóstica (sin atarte a ningún framework concreto) y que su desarrollo y construcción final sea lo más sencilla posible. Está desarrollada por Evan You, el creador de Vue. Actualmente, Vite soporta tanto proyectos vanilla (sin utilizar frameworks), como proyectos utilizando Vue, React, Preact o Lit-element (tanto en versión Javascript, como Typescript). [Fuente](https://lenguajejs.com/automatizadores/vite/guia-tutorial-inicial-de-vite/)
@@ -1574,84 +1581,9 @@ App.vue
 
 -   [Actualiza el perfil de un usuario](https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile)
 -   [upload-files](https://firebase.google.com/docs/storage/web/upload-files)
+-   [Archivos del curso](https://github.com/bluuweb/vue-3-firebase-9-pinia-router-4-auth-firestore/tree/04-files)
 
-Crear collection users
-
-:::warning Importante
-
-No olvidar el await en currentUser
-
-```js
-await this.getUser(user);
-```
-
-Ya que así todas las vistas protegidas esperarán la información del usuario, antes de ser pintada.
-:::
-
-```js
-async getUser(user) {
-    try {
-        const objetoUser = {
-            uid: user.uid,
-            email: user.email,
-            photoURL: user.photoURL,
-            displayName: user.displayName,
-        };
-        const docRef = doc(db, "users", user.uid);
-        const docSpan = await getDoc(docRef);
-        if (docSpan.exists()) {
-            console.log("existe");
-            this.userData = { ...docSpan.data(), uid: docSpan.id };
-        } else {
-            console.log("no existe");
-            await setDoc(docRef, objetoUser);
-            this.userData = objetoUser;
-        }
-    } catch (error) {
-        console.log(error);
-    }
-},
-async loginUser(email, password) {
-    this.loadingUser = true;
-    try {
-        const { user } = await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
-
-        this.getUser(user);
-
-        router.push("/");
-    } catch (error) {
-        // console.log(error.code);
-        return error.code;
-    } finally {
-        this.loadingUser = false;
-    }
-},
-currentUser() {
-    return new Promise((resolve, reject) => {
-        const unsuscribe = onAuthStateChanged(
-            auth,
-            async (user) => {
-                if (user) {
-                    await this.getUser(user);
-                } else {
-                    this.userData = null;
-                    const databaseStore = useDatabaseStore();
-                    databaseStore.$reset();
-                }
-                resolve(user);
-            },
-            (e) => reject(e)
-        );
-        unsuscribe();
-    });
-},
-```
-
-Reglas de seguridad
+### Reglas Firestore
 
 ```js
 rules_version = '2';
@@ -1669,193 +1601,176 @@ service cloud.firestore {
 }
 ```
 
-routes.js
+### Reglas Storage
+
+-   [tutorial](https://jsmobiledev.com/article/storage-security/)
+
+Refactorización updateUser:
+
+-   Lógica en una sola action.
+-   Cambio de directorio donde se almacenan las imágenes.
+-   Se agregó loading.
 
 ```js
-{
-    name: "perfil",
-    path: "/perfil",
-    component: Perfil,
-    beforeEnter: requireAuth,
+async updateUser(displayName, imagen) {
+    this.loadingUser = true;
+    try {
+        await updateProfile(auth.currentUser, {
+            displayName,
+        });
+
+        if (imagen) {
+            const storageRef = ref(
+                storage,
+                `perfiles/${this.userData.uid}`
+            );
+            await uploadBytes(storageRef, imagen.originFileObj);
+            const photoURL = await getDownloadURL(storageRef);
+            await updateProfile(auth.currentUser, {
+                photoURL,
+            });
+        }
+
+        this.setUser(auth.currentUser);
+    } catch (error) {
+        console.log(error);
+        return error.code;
+    } finally {
+        this.loadingUser = false;
+    }
 },
 ```
 
-App.vue
+Perfil.vue
 
-```html
-<a-menu-item v-if="userStore.userData" key="perfil">
-    <router-link to="/perfil">Perfil</router-link>
-</a-menu-item>
+```js
+const onFinish = async () => {
+    const error = await userStore.updateUser(
+        userStore.userData.displayName,
+        fileList.value[0]
+    );
+
+    if (!error) {
+        return message.success("Se actualizó tu información.");
+    }
+    message.error(error.code + " Ocurrió un error al actualizar el perfil");
+};
 ```
+
+```js
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+  	function restrictFileSize(sizeInMB) {
+      	return request.resource.size < sizeInMB * 1024 * 1024;
+    }
+
+  	function isAllowedFile() {
+        return request.resource.contentType.matches('image/jpeg')
+       	|| request.resource.contentType.matches('image/png')
+    }
+
+    match /perfiles/{uid} {
+    	allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null && restrictFileSize(1) && isAllowedFile();
+      allow update: if request.auth != null && request.auth.uid == uid && restrictFileSize(1) && isAllowedFile();
+    }
+  }
+}
+```
+
+## Redirect
+
+-   [configurar ruta 404](https://router.vuejs.org/guide/migration/#removed-star-or-catch-all-routes)
+
+database.js
+
+```js{24}
+async searchURL(id) {
+    try {
+        const docRef = doc(db, "urls", id);
+        const docSpan = await getDoc(docRef);
+        if (!docSpan.exists()) {
+            return false;
+        }
+        window.location.href = docSpan.data().name;
+        return docSpan.data().name;
+    } catch (error) {
+        console.log(error);
+        return false;
+    } finally {
+    }
+},
+async addUrl(name) {
+    this.loadingURL = true;
+    try {
+        const objetoDoc = {
+            name: name,
+            short: nanoid(6),
+            user: auth.currentUser.uid,
+        };
+        await setDoc(doc(db, "urls", objetoDoc.short), objetoDoc);
+        this.documents.push({
+            ...objetoDoc,
+            id: objetoDoc.short,
+        });
+    } catch (error) {
+        console.log(error.code);
+    } finally {
+        this.loadingURL = false;
+    }
+},
+```
+
+NotFound.vue
 
 ```vue
 <template>
-    <h1 class="text-center">Administra aquí tu perfil</h1>
-    <a-row>
-        <a-col
-            :xs="{ span: 24 }"
-            :sm="{ span: 18, offset: 3 }"
-            :lg="{ span: 12, offset: 6 }"
-        >
-            <a-form
-                :model="userStore.userData"
-                @finish="onFinish"
-                name="basicPerfilForm"
-                layout="vertical"
-                autocomplete="off"
-            >
-                <a-form-item
-                    label="Email (no editable)"
-                    name="email"
-                    :rules="[
-                        {
-                            required: true,
-                            whitespace: true,
-                            message: 'Por favor escriba un nombre válido',
-                        },
-                    ]"
-                >
-                    <a-input
-                        disabled
-                        v-model:value="userStore.userData.email"
-                    ></a-input>
-                </a-form-item>
-                <a-form-item
-                    label="Nombre de usuario"
-                    name="displayName"
-                    :rules="[
-                        {
-                            required: true,
-                            whitespace: true,
-                            message: 'Por favor escriba un nombre válido',
-                        },
-                    ]"
-                >
-                    <a-input
-                        v-model:value="userStore.userData.displayName"
-                    ></a-input>
-                </a-form-item>
-
-                <a-upload
-                    v-model:file-list="fileList"
-                    list-type="picture"
-                    :max-count="1"
-                    :before-upload="beforeUpload"
-                    @change="handleChange"
-                >
-                    <a-button> Subir foto de perfil </a-button>
-                </a-upload>
-
-                <a-form-item>
-                    <a-button
-                        type="primary"
-                        html-type="submit"
-                        :loading="userStore.loadingUser"
-                    >
-                        Actualizar
-                    </a-button>
-                </a-form-item>
-            </a-form>
-        </a-col>
-    </a-row>
+    <h1>404</h1>
 </template>
-
-<script setup>
-import { ref } from "vue";
-import { message } from "ant-design-vue";
-import { useUserStore } from "../stores/user";
-
-const userStore = useUserStore();
-
-const fileList = ref([]);
-
-const handleRemove = (file) => {
-    const index = fileList.value.indexOf(file);
-    const newFileList = fileList.value.slice();
-    newFileList.splice(index, 1);
-    fileList.value = newFileList;
-};
-
-const handleChange = (info) => {
-    // validación de jpg y png
-    if (info.file.status !== "uploading") {
-        const isJpgOrPng =
-            info.file.type === "image/jpeg" || info.file.type === "image/png";
-
-        if (!isJpgOrPng) {
-            message.error("Solo .jpg o .png");
-            handleRemove(info.file);
-            return;
-        }
-
-        const isLt2M = info.file.size / 1024 / 1024 < 2;
-
-        if (!isLt2M) {
-            message.error("Máximo 2MB!");
-            handleRemove(info.file);
-            return false;
-        }
-    }
-
-    // solo permitir una imagen
-    let resFileList = [...info.fileList];
-    resFileList = resFileList.slice(-1);
-    resFileList = resFileList.map((file) => {
-        if (file.response) {
-            file.url = file.response.url;
-        }
-
-        return file;
-    });
-    console.log(resFileList);
-    fileList.value = resFileList;
-};
-
-const beforeUpload = (file) => {
-    return false;
-};
-
-const onFinish = async (value) => {
-    fileList.value.forEach((file) => {
-        userStore.updateUser(file);
-    });
-};
-</script>
 ```
 
-firebaseConfig.js
+router.js
 
 ```js
-const app = initializeApp(firebaseConfig);
-const auth = getAuth();
-const db = getFirestore();
-const storage = getStorage(app);
-
-export { auth, db, storage };
-```
-
-userStore
-
-```js
-async updateUser(file) {
-    console.log(file.type);
-    console.log(file.name);
-    console.log(file.size);
-    console.log(file);
-    try {
-        const storageRef = ref(storage, `${this.userData.uid}/perfil`);
-        const spanshot = await uploadBytes(
-            storageRef,
-            file.originFileObj
-        );
-        const refURL = await getDownloadURL(spanshot.ref);
-        console.log(refURL);
-    } catch (error) {
-        console.log(error);
+const redireccion = async (to, from, next) => {
+    const userStore = useUserStore();
+    const databaseStore = useDatabaseStore();
+    userStore.loadingSession = true;
+    const name = await databaseStore.searchURL(to.params.pathMatch[0]);
+    if (!name) {
+        next();
+        userStore.loadingSession = false;
+    } else {
+        userStore.loadingSession = true;
+        next();
     }
-},
+};
+
+const routes = [
+    {
+        name: "redireccion",
+        path: "/:pathMatch(.*)*",
+        component: NotFound,
+        beforeEnter: redireccion,
+    },
+];
 ```
 
-:::warning Reglas de seguridad
-Pasar las reglas a true
-:::
+```js{5}
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /urls/{id} {
+        allow read: if true;
+        allow update, delete: if request.auth != null && request.auth.uid == resource.data.user;
+        allow create: if request.auth != null;
+    }
+    match /users/{id} {
+        allow read, update, delete: if request.auth != null && request.auth.uid == id;
+        allow create: if request.auth != null;
+    }
+  }
+}
+```
