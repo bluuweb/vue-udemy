@@ -1,4 +1,4 @@
-# REST Firebase
+# REST Firebase (option api)
 
 Ya aprendimos a trabajar con LocalStorage pero la cosa se pone más entretenida si utilizamos Firebase, una base de datos proporcionada por Google!
 

@@ -1,4 +1,4 @@
-# Vuex
+# Vuex (option api)
 [https://vuex.vuejs.org/](https://vuex.vuejs.org/)
 Sirve como un almacén centralizado para todos los componentes de una aplicación, con reglas que garantizan que el estado solo se puede modificar de una manera predecible.
 

@@ -1,4 +1,4 @@
-# Vue Router
+# Vue Router (option api)
 Vue Router es el enrutador oficial de Vue.js [https://router.vuejs.org/](https://router.vuejs.org/)
 
 ## Crear Proyecto

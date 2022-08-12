@@ -1,4 +1,4 @@
-# Fundamentos
+# Fundamentos (option api)
 
 ## ¿Qué es Vue?
 * Vue es un framework progresivo para construir interfaces de usuario.

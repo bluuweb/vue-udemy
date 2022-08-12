@@ -1,4 +1,4 @@
-# AUTH API Firebase
+# AUTH API Firebase (option api)
 Configurar auth en nuestra aplicación de Vue.
 
 ## Reglas de Seguridad

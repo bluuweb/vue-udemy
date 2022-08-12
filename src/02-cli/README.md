@@ -1,4 +1,4 @@
-# Vue CLI
+# Vue CLI (option api)
 Vue viene cuenta con una herramienta para crear nuestros proyectos:
 
 - [https://cli.vuejs.org/](https://cli.vuejs.org/)

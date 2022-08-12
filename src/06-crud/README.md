@@ -1,4 +1,4 @@
-# CRUD Vuex
+# CRUD Vuex (option api)
 Realizaremos una práctica de Vuex y Formularios:
 
 ## Create
